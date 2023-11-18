@@ -10,13 +10,12 @@ export default async function handler(req, res) {
 
       // Check if the project belongs to the user
       const userProjectExists = await redis.hexists(
-        `user:${userId}:projects`,
-        projectId,
+          `user:${userId}:projects`,
+          projectId,
       )
       if (!userProjectExists) {
-        return res
-          .status(404)
-          .json({message: 'Project not found or does not belong to the user'})
+        return res.status(404).json(
+            {message : 'Project not found or does not belong to the user'})
       }
 
       // Construct the full page Redis key
@@ -25,7 +24,7 @@ export default async function handler(req, res) {
       // Check if the page exists
       const pageExists = await redis.exists(pageKey)
       if (!pageExists) {
-        return res.status(404).json({message: 'Page not found'})
+        return res.status(404).json({message : 'Page not found'})
       }
 
       // Delete the page
@@ -34,14 +33,14 @@ export default async function handler(req, res) {
       // Optionally, remove the pageId from the project's page list/set
       // Example: await redis.srem(`project:${projectId}:pages`, pageKey);
 
-      res.status(200).json({message: 'Page deleted successfully'})
+      res.status(200).json({message : 'Page deleted successfully'})
     } catch (error) {
       console.error('Error deleting page:', error)
-      res.status(500).json({message: 'Error deleting page'})
+      res.status(500).json({message : 'Error deleting page'})
     }
   } else {
     // Handle non-DELETE requests
-    res.setHeader('Allow', ['DELETE'])
+    res.setHeader('Allow', [ 'DELETE' ])
     res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
