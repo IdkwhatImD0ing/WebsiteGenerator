@@ -3,6 +3,7 @@ import TopBar from '../topbar';
 import Chat from './chat';
 import Renderer from './renderer';
 import Editor from './editor';
+import Sidebar from './sidebar';
 import {
   Box,
   Button,
@@ -28,7 +29,8 @@ export default function Page() {
   return (
     <div>
       <TopBar />
-      <Stack direction='row' spacing={2}>
+      <Stack direction='row' spacing={2} justifyContent="space-between" alignItems="center">
+        <Sidebar/>
         <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Framework</InputLabel>
