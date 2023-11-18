@@ -4,8 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 import TextInput from './textInput';
 import axios from 'axios';
 
-export default function Chat({ setHtml, setCss, setJs }) {
-  const [messages, setMessages] = useState([]);
+export default function Chat({
+  messages,
+  setMessages,
+  setHtml,
+  setCss,
+  setJs
+}) {
   const messagesEndRef = useRef(null);
   const addMessage = async newMessage => {
     setMessages([...messages, { text: newMessage, role: 'user' }]);
@@ -29,9 +34,8 @@ export default function Chat({ setHtml, setCss, setJs }) {
     >
       <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
-        {messages.map((message, index) => (
-          <p key={index}>{message.text}</p>
-        ))}
+        {messages != null &&
+          messages.map((message, index) => <p key={index}>{message.text}</p>)}
         <div ref={messagesEndRef} />
       </Box>
       <TextInput addMessage={addMessage} />

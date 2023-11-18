@@ -11,6 +11,7 @@ export default function Page() {
   const [html, setHtml] = useState('<h1> Renderer </h1>');
   const [css, setCss] = useState('');
   const [js, setJs] = useState('');
+  const [messages, setMessages] = useState([]);
   return (
     <div>
       <TopBar />
@@ -22,7 +23,13 @@ export default function Page() {
         justifyContent='center'
       >
         {showChat ? (
-          <Chat setHtml={setHtml} setCss={setCss} setJs={setJs} />
+          <Chat
+            messages={messages}
+            setMessages={setMessages}
+            setHtml={setHtml}
+            setCss={setCss}
+            setJs={setJs}
+          />
         ) : (
           <Editor
             html={html}
