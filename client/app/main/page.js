@@ -1,8 +1,8 @@
 'use client';
 import TopBar from '../topbar';
-import Chat from './chat/chat';
-import Renderer from './renderer/renderer';
-import Editor from './editor/editor';
+import Chat from './chat';
+import Renderer from './renderer';
+import Editor from './editor';
 import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 

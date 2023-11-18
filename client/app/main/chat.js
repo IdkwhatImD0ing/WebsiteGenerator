@@ -13,9 +13,18 @@ export default function Chat({
 }) {
   const messagesEndRef = useRef(null);
   const addMessage = async newMessage => {
-    setMessages([...messages, { text: newMessage, role: 'user' }]);
-    // what's the right endpoint
-    const response = await axios.post('/chat', messages);
+    const newMessages = [...messages, { content: newMessage, role: 'user' }];
+    setMessages([...messages, { content: newMessage, role: 'user' }]);
+    const conversation = { type: 'text', messages: newMessages };
+    const response = await axios.post(
+      'http://localhost:8000/chat',
+      conversation,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
     setHtml(response);
   };
   useEffect(() => {
@@ -35,7 +44,9 @@ export default function Chat({
       <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
         {messages != null &&
-          messages.map((message, index) => <p key={index}>{message.text}</p>)}
+          messages.map((message, index) => (
+            <p key={index}>{message.content}</p>
+          ))}
         <div ref={messagesEndRef} />
       </Box>
       <TextInput addMessage={addMessage} />
