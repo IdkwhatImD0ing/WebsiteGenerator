@@ -3,7 +3,7 @@ import TopBar from '../topbar';
 import Chat from './chat/chat';
 import Renderer from './renderer/renderer';
 import Editor from './editor/editor';
-import { Box, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, Select, MenuItem, Stack } from '@mui/material';
 import { useState } from 'react';
 
 export default function Page() {
@@ -11,7 +11,7 @@ export default function Page() {
   const [html, setHtml] = useState('<h1> Renderer </h1>');
   const [css, setCss] = useState('');
   const [js, setJs] = useState('');
-  const [language, setLanguage] = useState('html');
+  const [framework, setFramework] = useState('html');
 
   const handleChange = (event) => {
     setLanguage(event.target.value);
@@ -20,8 +20,7 @@ export default function Page() {
   return (
     <div>
       <TopBar />
-      {/* # display inline div, have some space between them */}
-      <div style={{display: 'inline-flex', justifyContent: 'space-between', width: '100%'}}>
+      <Stack direction="row" spacing={2}>
         <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Age</InputLabel>
@@ -40,10 +39,7 @@ export default function Page() {
             <MenuItem value={"svelte"}>Svelte</MenuItem>
           </Select>
         </FormControl>
-      </div>
-      <h2>
-        {language}
-      </h2>
+      </Stack>
 
       <Box
         key='main'
