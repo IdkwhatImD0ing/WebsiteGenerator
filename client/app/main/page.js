@@ -22,7 +22,7 @@ export default function Page() {
         justifyContent='center'
       >
         {showChat ? (
-          <Chat />
+          <Chat setHtml={setHtml} setCss={setCss} setJs={setJs} />
         ) : (
           <Editor
             html={html}

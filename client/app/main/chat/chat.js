@@ -2,12 +2,16 @@
 import { Box } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import TextInput from './textInput';
+import axios from 'axios';
 
-export default function Chat() {
+export default function Chat({ setHtml, setCss, setJs }) {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
-  const addMessage = newMessage => {
-    setMessages([...messages, { text: newMessage, from: 'user' }]);
+  const addMessage = async newMessage => {
+    setMessages([...messages, { text: newMessage, role: 'user' }]);
+    // what's the right endpoint
+    const response = await axios.post('/chat', messages);
+    setHtml(response);
   };
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
