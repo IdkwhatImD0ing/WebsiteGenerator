@@ -1,26 +1,29 @@
 "use client";
-import {Box, TextField, Button} from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import AceEditor from "react-ace";
-import {useState} from "react";
-export default function Editor({html, setHtml}) {
+import { useState } from "react";
+export default function Editor({ html, setHtml }) {
   const [htmlText, setHtmlText] = useState(html);
 
-  const handleChange = (newValue, setter) => { setter(newValue); };
+  const handleChange = (newValue, setter) => {
+    setter(newValue);
+  };
 
-  const refresh = () => { setHtml(htmlText); };
+  const refresh = () => {
+    setHtml(htmlText);
+  };
 
   return (
     <Box
-  key = "editor"
-  backgroundColor = "white"
-  color = "black"
-  width = "100%"
-  flexGrow = "1"
-  display = "flex"
-  flexDirection =
-      "column" >
-      <Button onClick = {refresh}>Refresh<
-          /Button>
+      key="editor"
+      backgroundColor="white"
+      color="black"
+      width="100%"
+      flexGrow="1"
+      display="flex"
+      flexDirection="column"
+    >
+      <Button onClick={refresh}>Refresh</Button>
       <AceEditor
         mode="html"
         theme="monokai"
@@ -36,7 +39,7 @@ export default function Editor({html, setHtml}) {
           tabSize: 2,
         }}
         style={{ width: "100%", height: "100%" }}
-      /><
-      /Box>
+      />
+    </Box>
   );
 }

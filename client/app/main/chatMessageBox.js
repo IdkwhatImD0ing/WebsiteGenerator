@@ -1,24 +1,25 @@
 "use client";
-import React, {useRef, useEffect} from "react";
+import React, { useRef, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 
-export default function ChatMessageBox({messages}) {
+export default function ChatMessageBox({ messages }) {
   const messagesEndRef = useRef(null);
 
-  useEffect(
-      () => { messagesEndRef.current?.scrollIntoView({behavior : "smooth"}); },
-      [ messages ]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
     <List>
       {messages.map((message, index) => (
         <ListItem key={index} alignItems="flex-start">
           <ListItemText
-  primary = { < Typography
+            primary={
+              <Typography
                 sx={{
-    fontWeight: "bold",
+                  fontWeight: "bold",
                 }}
               >
                 You:{" "}
@@ -29,13 +30,11 @@ export default function ChatMessageBox({messages}) {
                 {message.content}
               </Typography>
             }
-            secondaryTypographyProps={
-    { style: {whiteSpace: "pre-line"} }}
+            secondaryTypographyProps={{ style: { whiteSpace: "pre-line" } }}
           />
         </ListItem>
       ))}
-      <div ref={
-    messagesEndRef} />
+      <div ref={messagesEndRef} />
     </List>
   );
 }
