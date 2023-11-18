@@ -9,26 +9,24 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Sidebar({}) {
-  const [projects, setProjects] = useState([ "proj1", "proj2", "proj3" ]);
+  const [projects, setProjects] = useState(["proj1", "proj2", "proj3"]);
   const [selectedProjectId, setSelectedProjectId] = useState(1);
-  const [pages, setPages] = useState([ "page1", "page2", "page3" ]);
+  const [pages, setPages] = useState(["page1", "page2", "page3"]);
   const [open, setOpen] = useState(false);
 
-  useEffect(
-      () => {
-          // fetchProjects()
-      },
-      []);
+  useEffect(() => {
+    // fetchProjects()
+  }, []);
 
   const fetchProjects = async () => {
     try {
       const response = await axios.get("http://localhost:8000/projects", {
-        headers : {"Content-Type" : "application/json"},
+        headers: { "Content-Type": "application/json" },
       });
       console.log(response);
       setProjects(response.data);
@@ -41,9 +39,9 @@ export default function Sidebar({}) {
     // TODO: fetch pages for selected project
     try {
       const response = await axios.get(
-          "http://localhost:8000/pages",
-          projectId,
-          {headers : {"Content-Type" : "application/json"}},
+        "http://localhost:8000/pages",
+        projectId,
+        { headers: { "Content-Type": "application/json" } },
       );
       console.log(response);
       setPages(response.data);
@@ -91,8 +89,11 @@ export default function Sidebar({}) {
           </Button>
         </Box>
 
-        <Box
-  style = {{ width: 250, }} > <List> {projects.map((project, index) => (
+        <Box style={{ width: 250 }}>
+          {" "}
+          <List>
+            {" "}
+            {projects.map((project, index) => (
               <Box key={index}>
                 <Button onClick={() => selectProject(index)}>
                   <ListItemText primary={project} />
