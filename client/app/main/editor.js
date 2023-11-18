@@ -22,9 +22,8 @@ export default function Editor({ html, css, js, setHtml, setCss, setJs }) {
       key='editor'
       backgroundColor='white'
       color='black'
-      width='45vw'
-      height='80vh'
-      margin='5px'
+      width='100%'
+      flexGrow='1'
       display='flex'
       flexDirection='column'
     >
@@ -43,40 +42,8 @@ export default function Editor({ html, css, js, setHtml, setCss, setJs }) {
           showLineNumbers: true,
           tabSize: 2
         }}
-        style={{ width: '100%', height: '50%' }}
+        style={{ width: '100%', height: '100%' }}
       />
-      <AceEditor
-        mode='css'
-        theme='monokai'
-        value={cssText}
-        onChange={e => handleChange(e, setCssText)}
-        name='css_editor'
-        editorProps={{ $blockScrolling: true }}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: true,
-          tabSize: 2
-        }}
-        style={{ width: '100%', height: '50%' }}
-      />
-      {/* <AceEditor
-        mode='js'
-        theme='monokai'
-        value={jsText}
-        onChange={e => handleChange(e, setJsText)}
-        name='js_editor'
-        editorProps={{ $blockScrolling: true }}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: true,
-          tabSize: 2
-        }}
-        style={{ width: '100%', height: '50%' }}
-      /> */}
     </Box>
   );
 }

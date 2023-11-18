@@ -1,7 +1,6 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { useRef, useEffect } from 'react';
 
 export default function Renderer({ html, css, js }) {
   return (
@@ -11,7 +10,6 @@ export default function Renderer({ html, css, js }) {
       color='black'
       width='45vw'
       height='80vh'
-      margin='5px'
     >
       <iframe
         srcDoc={html}

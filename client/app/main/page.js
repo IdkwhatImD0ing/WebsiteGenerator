@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 export default function Page() {
   const [showChat, setShowChat] = useState(true);
-  const [html, setHtml] = useState('<h1> Renderer </h1>');
+  const [html, setHtml] = useState('<h1> This is a header </h1>');
   const [css, setCss] = useState('');
   const [js, setJs] = useState('');
   const [framework, setFramework] = useState('html');
@@ -29,7 +29,6 @@ export default function Page() {
     <div>
       <TopBar />
       <Stack direction='row' spacing={2}>
-        <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Framework</InputLabel>
           <Select
@@ -56,25 +55,38 @@ export default function Page() {
         justifyContent='center'
       >
         {' '}
-        {showChat ? (
-          <Chat
-            messages={messages}
-            html={html}
-            setMessages={setMessages}
-            setHtml={setHtml}
-            setCss={setCss}
-            setJs={setJs}
-          />
-        ) : (
-          <Editor
-            html={html}
-            css={css}
-            js={js}
-            setHtml={setHtml}
-            setCss={setCss}
-            setJs={setJs}
-          />
-        )}
+        <Box width='45vw' height='80vh' display='flex' flexDirection='column'>
+          {showChat ? (
+            <Chat
+              messages={messages}
+              html={html}
+              setMessages={setMessages}
+              setHtml={setHtml}
+              setCss={setCss}
+              setJs={setJs}
+            />
+          ) : (
+            <Editor
+              html={html}
+              css={css}
+              js={js}
+              setHtml={setHtml}
+              setCss={setCss}
+              setJs={setJs}
+            />
+          )}
+          <Button
+            variant='contained'
+            sx={{
+              backgroundColor: 'orange',
+              '&:hover': { backgroundColor: 'darkorange' }
+            }}
+            height='10px'
+            onClick={() => setShowChat(!showChat)}
+          >
+            Switch to {showChat ? 'Editor' : 'Chat'}
+          </Button>
+        </Box>
         <Renderer html={html} css={css} js={js} />
       </Box>
     </div>

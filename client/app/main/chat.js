@@ -1,6 +1,7 @@
 'use client';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
+import ChatMessageBox from './chatMessageBox';
 import TextInput from './textInput';
 import axios from 'axios';
 
@@ -12,7 +13,6 @@ export default function Chat({
   setCss,
   setJs
 }) {
-  const messagesEndRef = useRef(null);
   const addMessage = async newMessage => {
     const messageToChat = newMessage + `\nThe current html is \n${html}`;
     console.log(messageToChat);
@@ -32,29 +32,21 @@ export default function Chat({
       }
     );
     console.log(response);
+    // TODO: check for markdown
     setHtml(response.data.slice(7, -3));
   };
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
   return (
     <Box
       key='chat'
       backgroundColor='white'
       color='black'
-      width='45vw'
-      height='80vh'
-      margin='5px'
+      width='100%'
+      flexGrow='1'
       display='flex'
       flexDirection='column'
     >
-      <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
-        {messages != null &&
-          messages
-            .filter(message => message.role === 'user')
-            .map((message, index) => <p key={index}>{message.content}</p>)}
-        <div ref={messagesEndRef} />
+        <ChatMessageBox messages={messages} />
       </Box>
       <TextInput addMessage={addMessage} />
     </Box>
