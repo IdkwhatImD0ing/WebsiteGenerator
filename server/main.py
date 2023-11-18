@@ -35,8 +35,9 @@ async def text_chat(conversation: Conversation):
         # Convert all image messages to messages except the last one
         msg = conversation.messages[i]
         if isinstance(msg, ImageMessage):
-            conversation.messages[i] = Message(role=msg.role,
-                                               content=msg.content[0].text)
+            conversation.messages[i] = Message(
+                role=msg.role, content=msg.content[0].text
+            )
 
     systemMessage = Message(
         role="system",
@@ -58,8 +59,9 @@ Ensure that all generated HTML is valid and can be rendered correctly with Tailw
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
-                            status_code=200)
+        return JSONResponse(
+            content=response.choices[0].message.content, status_code=200
+        )
     else:
         response = await client.chat.completions.create(
             model="gpt-4-vision-preview",
@@ -68,5 +70,6 @@ Ensure that all generated HTML is valid and can be rendered correctly with Tailw
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
-                            status_code=200)
+        return JSONResponse(
+            content=response.choices[0].message.content, status_code=200
+        )
