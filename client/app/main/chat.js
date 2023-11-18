@@ -27,11 +27,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
     const response = await axios.post(
       'http://localhost:8000/chat',
       conversation,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
+      { headers: { 'Content-Type': 'application/json' } }
     );
     console.log(response);
     setHtml(removeMarkdown(response.data));

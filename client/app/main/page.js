@@ -4,6 +4,7 @@ import Chat from './chat';
 import Renderer from './renderer';
 import Editor from './editor';
 import Sidebar from './sidebar';
+
 import {
   Box,
   Button,
