@@ -1,22 +1,36 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { Button, Box } from '@mui/material';
 
-import TopBar from "./topbar";
+import { auth } from '@clerk/nextjs';
 
 export default function Home() {
+  const { userId } = auth();
+
+  if (userId) {
+    redirect('/main');
+  }
   return (
-    <div
-      style={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+    <Box
+      height='100vh'
+      width='100vw'
+      display='flex'
+      flexDirection='column'
+      justifyContent='center'
+      alignItems='center'
+      sx={{
+        backgroundImage: 'linear-gradient(to right, #ff6e7f, #bfe9ff)'
       }}
     >
-      {/* main */}
-      <TopBar />
-      <h1>Home Page</h1>
-    </div>
+      <h1>Website Generator</h1>
+      <Box display='flex' flexDirection='row'>
+        <Link href='/sign-in' passHref>
+          <Button>Sign-in</Button>
+        </Link>
+        <Link href='/sign-up' passHref>
+          <Button>Sign-up</Button>
+        </Link>
+      </Box>
+    </Box>
   );
 }
