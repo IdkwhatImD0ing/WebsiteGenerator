@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 
-export default function TextInput({ addText }) {
+export default function TextInput({ addMessage }) {
   const [inputText, setInputText] = useState('');
 
   const handleChange = e => {
@@ -11,7 +11,7 @@ export default function TextInput({ addText }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    addText(inputText);
+    addMessage(inputText);
     setInputText('');
   };
 

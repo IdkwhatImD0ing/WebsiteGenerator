@@ -4,14 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import TextInput from './textInput';
 
 export default function Chat() {
-  const [texts, setTexts] = useState([]);
-  const textsEndRef = useRef(null);
-  const addText = newText => {
-    setTexts([...texts, newText]);
+  const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
+  const addMessage = newMessage => {
+    setMessages([...messages, newMessage]);
   };
   useEffect(() => {
-    textsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [texts]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   return (
     <Box
       key='chat'
@@ -25,12 +25,12 @@ export default function Chat() {
     >
       <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
-        {texts.map((text, index) => (
-          <p key={index}>{text}</p>
+        {messages.map((message, index) => (
+          <p key={index}>{message}</p>
         ))}
-        <div ref={textsEndRef} />
+        <div ref={messagesEndRef} />
       </Box>
-      <TextInput addText={addText} />
+      <TextInput addMessage={addMessage} />
     </Box>
   );
 }
