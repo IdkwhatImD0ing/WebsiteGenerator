@@ -6,19 +6,11 @@ import { useRef, useEffect } from 'react';
 export default function Renderer({ html, css, js }) {
   const containerRef = useRef(null);
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.innerHTML = html;
-      const styleTag = document.createElement('style');
-      styleTag.textContent = css;
-      containerRef.current.appendChild(styleTag);
-
-      // Execute JavaScript
-      try {
-        new Function(js)();
-      } catch (error) {
-        console.error('Error executing JavaScript:', error);
-      }
-    }
+    const doc = containerRef.current.contentDocument;
+    doc.body.innerHTML = html;
+    const styleEl = doc.createElement('style');
+    styleEl.textContent = css;
+    doc.head.appendChild(styleEl);
   }, [html, css, js]);
   return (
     <Box
@@ -28,7 +20,8 @@ export default function Renderer({ html, css, js }) {
       width='45vw'
       height='80vh'
       margin='5px'
-      ref={containerRef}
-    ></Box>
+    >
+      <iframe ref={containerRef} style={{ width: '100%', height: '100%' }} />
+    </Box>
   );
 }
