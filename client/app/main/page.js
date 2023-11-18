@@ -14,7 +14,7 @@ export default function Page() {
   const [framework, setFramework] = useState('html');
 
   const handleChange = (event) => {
-    setLanguage(event.target.value);
+    setFramework(event.target.value);
   }
 
   return (
