@@ -13,7 +13,7 @@ import {
   MenuItem,
   Stack
 } from '@mui/material';
-import { useState } from 'react';
+import {useState} from 'react';
 
 export default function Page() {
   const [showChat, setShowChat] = useState(true);
@@ -22,9 +22,7 @@ export default function Page() {
   const [js, setJs] = useState('');
   const [framework, setFramework] = useState('html');
   const [messages, setMessages] = useState([]);
-  const handleChange = event => {
-    setFramework(event.target.value);
-  };
+  const handleChange = event => { setFramework(event.target.value); };
 
   return (
     <div>
@@ -35,37 +33,34 @@ export default function Page() {
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Framework</InputLabel>
           <Select
-            labelId='demo-simple-select-label'
-            id='demo-simple-select'
-            value={framework}
-            label='Framework'
-            onChange={handleChange}
-            sx={{ width: '150px' }}
-          >
-            <MenuItem value={'html'}>Html</MenuItem>
+  labelId = 'demo-simple-select-label'
+  id = 'demo-simple-select'
+  value = {framework} label = 'Framework'
+  onChange = {handleChange} sx =
+      {{ width: '150px' }} >
+      <MenuItem value = {'html'}>
+          Html</MenuItem>
             <MenuItem value={'react'}>React</MenuItem>
-            <MenuItem value={'vue'}>Vue</MenuItem>
+      <MenuItem value = {'vue'}>Vue<
+          /MenuItem>
             <MenuItem value={'angular'}>Angular</MenuItem>
-            <MenuItem value={'svelte'}>Svelte</MenuItem>
+      <MenuItem value = {'svelte'}>Svelte</MenuItem>
           </Select>
-        </FormControl>
+      </FormControl>
       </Stack>
 
-      <Box
-        key='main'
-        display='flex'
-        flexDirection='row'
-        justifyContent='center'
-      >
-        {' '}
-        {showChat ? (
-          <Chat
+      < Box
+  key = 'main'
+  display = 'flex'
+  flexDirection = 'row'
+  justifyContent = 'center' > {' '} {showChat ? (< Chat
             messages={messages}
             html={html}
             setMessages={setMessages}
             setHtml={setHtml}
             setCss={setCss}
-            setJs={setJs}
+            setJs={
+    setJs}
           />
         ) : (
           <Editor
@@ -77,7 +72,8 @@ export default function Page() {
             setJs={setJs}
           />
         )}
-        <Renderer html={html} css={css} js={js} />
+        <Renderer html={html} css={css} js={
+    js} />
       </Box>
     </div>
   );
