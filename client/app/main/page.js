@@ -3,7 +3,15 @@ import TopBar from '../topbar';
 import Chat from './chat';
 import Renderer from './renderer';
 import Editor from './editor';
-import { Box, Button } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Stack
+} from '@mui/material';
 import { useState } from 'react';
 
 export default function Page() {
@@ -11,23 +19,43 @@ export default function Page() {
   const [html, setHtml] = useState('<h1> Renderer </h1>');
   const [css, setCss] = useState('');
   const [js, setJs] = useState('');
-  const [messages, setMessages] = useState([
-    {
-      role: 'system',
-      content:
-        'You are a web development agent. Your task is to take in user input and generate html with tailwindcss to render what the user requires of you. You will need to import tailwindcss. Only generate valid html that can be rendered, and nothing else. Only return the html as a string in your response, and nothing else. Do not include the triple quotes or the html.'
-    }
-  ]);
+  const [framework, setFramework] = useState('html');
+  const [messages, setMessages] = useState([]);
+  const handleChange = event => {
+    setFramework(event.target.value);
+  };
+
   return (
     <div>
       <TopBar />
-      <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
+      <Stack direction='row' spacing={2}>
+        <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
+        <FormControl fullWidth>
+          <InputLabel id='demo-simple-select-label'>Framework</InputLabel>
+          <Select
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
+            value={framework}
+            label='Framework'
+            onChange={handleChange}
+            sx={{ width: '150px' }}
+          >
+            <MenuItem value={'html'}>Html</MenuItem>
+            <MenuItem value={'react'}>React</MenuItem>
+            <MenuItem value={'vue'}>Vue</MenuItem>
+            <MenuItem value={'angular'}>Angular</MenuItem>
+            <MenuItem value={'svelte'}>Svelte</MenuItem>
+          </Select>
+        </FormControl>
+      </Stack>
+
       <Box
         key='main'
         display='flex'
         flexDirection='row'
         justifyContent='center'
       >
+        {' '}
         {showChat ? (
           <Chat
             messages={messages}

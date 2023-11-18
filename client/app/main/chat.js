@@ -14,7 +14,8 @@ export default function Chat({
 }) {
   const messagesEndRef = useRef(null);
   const addMessage = async newMessage => {
-    const messageToChat = newMessage;
+    const messageToChat = newMessage + `\nThe current html is \n${html}`;
+    console.log(messageToChat);
     setMessages([...messages, { content: newMessage, role: 'user' }]);
     const newMessagesToChat = [
       ...messages,
@@ -31,7 +32,7 @@ export default function Chat({
       }
     );
     console.log(response);
-    setHtml(response.data);
+    setHtml(response.data.slice(7, -3));
   };
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
