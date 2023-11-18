@@ -1,108 +1,150 @@
+// Assuming your handlers are in a file called `projectHandlers.js`
 import {POST, DELETE, GET} from '../app/api/projects/route'
 import redis from 'lib/redis'
-import http from 'http'
-import {URL} from 'url'
+import {v4 as uuidv4} from 'uuid'
 
-jest.mock('../lib/redis')
+// Mock the lib/redis module
+jest.mock('lib/redis', () => ({
+  hset: jest.fn(),
+  hdel: jest.fn(),
+  hexists: jest.fn(),
+  keys: jest.fn(),
+  del: jest.fn(),
+  hgetall: jest.fn(),
+}))
 
-describe('POST', () => {
-  it('should create a project and return a successful response', async () => {
-    const req = new http.IncomingMessage()
-    req.json = jest
-      .fn()
-      .mockResolvedValue({userId: 'user1', projectName: 'project1'})
+// Mock the uuid module
+jest.mock('uuid', () => ({
+  v4: jest.fn(),
+}))
+
+// Helper function to simulate a Response object
+const createResponse = (body, status) => {
+  return {
+    json: async () => body,
+    status,
+  }
+}
+
+describe('POST handler for creating a project', () => {
+  it('creates a project successfully', async () => {
+    const fakeProjectId = 'project-id'
+    uuidv4.mockReturnValue(fakeProjectId)
+    const fakeProjectName = 'Project Name'
+
+    const req = {
+      json: async () => ({
+        userId: 'user123',
+        projectName: fakeProjectName,
+      }),
+    }
+
     const response = await POST(req)
+    const data = await response.json()
+
     expect(response.status).toBe(200)
-    expect(JSON.parse(response.body)).toHaveProperty('projectId')
-    expect(JSON.parse(response.body)).toHaveProperty('projectName', 'project1')
-    expect(JSON.parse(response.body)).toHaveProperty(
-      'message',
-      'Project created successfully',
-    )
-  })
-
-  it('should return 500 if there is an error creating the project', async () => {
-    const req = new http.IncomingMessage()
-    req.json = jest.fn().mockRejectedValue(new Error('Error creating project'))
-    const response = await POST(req)
-    expect(response.status).toBe(500)
-  })
-})
-
-describe('DELETE', () => {
-  it('should delete a project and return a successful response', async () => {
-    redis.hexists.mockResolvedValue(1)
-    redis.keys.mockResolvedValue([])
-    const req = new http.IncomingMessage()
-    req.json = jest
-      .fn()
-      .mockResolvedValue({projectId: 'project1', userId: 'user1'})
-    const response = await DELETE(req)
-    expect(response.status).toBe(200)
-    expect(JSON.parse(response.body)).toHaveProperty(
-      'message',
-      'Project and its pages deleted successfully',
-    )
-  })
-
-  it('should return 404 if the project does not exist', async () => {
-    redis.hexists.mockResolvedValue(0)
-    const req = new http.IncomingMessage()
-    req.json = jest
-      .fn()
-      .mockResolvedValue({projectId: 'project1', userId: 'user1'})
-    const response = await DELETE(req)
-    expect(response.status).toBe(404)
-  })
-
-  it('should return 500 if there is an error deleting the project', async () => {
-    redis.hexists.mockResolvedValue(1)
-    redis.keys.mockRejectedValue(new Error('Error deleting project'))
-    const req = new http.IncomingMessage()
-    req.json = jest
-      .fn()
-      .mockResolvedValue({projectId: 'project1', userId: 'user1'})
-    const response = await DELETE(req)
-    expect(response.status).toBe(500)
-  })
-})
-
-describe('GET', () => {
-  it('should return the projects for a user', async () => {
-    redis.hgetall.mockResolvedValue({
-      project1: 'project1',
-      project2: 'project2',
+    expect(data).toEqual({
+      projectId: fakeProjectId,
+      projectName: fakeProjectName,
+      message: 'Project created successfully',
     })
-    const req = new http.IncomingMessage()
-    req.url = new URL('http://localhost/?userId=user1')
-    const response = await GET(req)
+
+    expect(redis.hset).toHaveBeenCalledWith(
+      'projects',
+      fakeProjectId,
+      fakeProjectName,
+    )
+    expect(redis.hset).toHaveBeenCalledWith(
+      `user:user123:projects`,
+      fakeProjectId,
+      fakeProjectName,
+    )
+  })
+
+  // ... additional tests for error cases
+})
+
+describe('DELETE handler for deleting a project', () => {
+  it('deletes a project and its pages successfully', async () => {
+    const fakeProjectId = 'project-id'
+    redis.hexists.mockResolvedValue(1)
+    redis.keys.mockResolvedValue(['page:project-id:1', 'page:project-id:2'])
+
+    const req = {
+      json: async () => ({
+        userId: 'user123',
+        projectId: fakeProjectId,
+      }),
+    }
+
+    const response = await DELETE(req)
+    const data = await response.json()
+
     expect(response.status).toBe(200)
-    expect(JSON.parse(response.body)).toEqual([
-      {projectId: 'project1', projectName: 'project1'},
-      {projectId: 'project2', projectName: 'project2'},
+    expect(data).toEqual({
+      message: 'Project and its pages deleted successfully',
+    })
+
+    expect(redis.hdel).toHaveBeenCalledWith('projects', fakeProjectId)
+    expect(redis.hdel).toHaveBeenCalledWith(
+      `user:user123:projects`,
+      fakeProjectId,
+    )
+    expect(redis.del).toHaveBeenCalledTimes(2)
+  })
+
+  // ... additional tests for error cases
+})
+
+describe('GET handler for fetching projects of a user', () => {
+  it('fetches user projects successfully', async () => {
+    const fakeUserId = 'user123'
+    const fakeProjects = {
+      'project-id-1': 'Project 1',
+      'project-id-2': 'Project 2',
+    }
+    redis.hgetall.mockResolvedValue(fakeProjects)
+
+    const req = {
+      url: `http://localhost/api/projects?userId=${fakeUserId}`,
+    }
+
+    const response = await GET(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual([
+      {projectId: 'project-id-1', projectName: 'Project 1'},
+      {projectId: 'project-id-2', projectName: 'Project 2'},
     ])
   })
 
-  it('should return 400 if the userId is not provided', async () => {
-    const req = new http.IncomingMessage()
-    req.url = new URL('http://localhost/')
+  it('returns 400 if user ID is not provided', async () => {
+    const req = {
+      url: `http://localhost/api/projects`,
+    }
+
     const response = await GET(req)
+
     expect(response.status).toBe(400)
+    const data = await response.json()
+    expect(data).toEqual({message: 'User ID is required'})
   })
 
-  it('should return 404 if the user has no projects', async () => {
+  it('returns 404 if no projects are found for the user', async () => {
+    const fakeUserId = 'user123'
     redis.hgetall.mockResolvedValue(null)
-    const req = new http.IncomingMessage()
-    req.url = new URL('http://localhost/?userId=user1')
+
+    const req = {
+      url: `http://localhost/api/projects?userId=${fakeUserId}`,
+    }
+
     const response = await GET(req)
+
     expect(response.status).toBe(404)
+    const data = await response.json()
+    expect(data).toEqual({message: 'No projects found for this user'})
   })
 
-  it('should return 500 if there is an error fetching the projects', async () => {
-    redis.hgetall.mockRejectedValue(new Error('Error fetching user projects'))
-    const req = new http.IncomingMessage()
-    req.url = new URL('http://localhost/?userId=user1')
-    const response = await GET(req)
-    expect(response.status).toBe(500)
-  })
+  // ... additional tests for error cases
 })

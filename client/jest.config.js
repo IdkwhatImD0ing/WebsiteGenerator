@@ -1,11 +1,4 @@
+// jest.config.js
 module.exports = {
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/babel-jest',
-  },
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-  },
+  testEnvironment: 'node', // Use the Node environment for server-side API testing
 }

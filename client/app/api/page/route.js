@@ -7,6 +7,7 @@ export async function GET(req) {
     // Extract project ID and page ID from the search params
     const {searchParams} = new URL(req.url)
     const projectId = searchParams.get('projectId')
+    const pageId = searchParams.get('pageId')
 
     // Construct the full page Redis key
     const pageKey = `page:${projectId}:${pageId}`

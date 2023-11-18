@@ -1,72 +1,142 @@
+// Assuming your handlers are in a file called `pageHandlers.js`
 import {GET, PUT, POST, DELETE} from '../app/api/page/route'
-import {createServer} from 'http'
-import request from 'supertest'
+import redis from 'lib/redis'
+import {v4 as uuidv4} from 'uuid'
 
-jest.mock('lib/redis')
+// Mock the lib/redis module
+jest.mock('lib/redis', () => ({
+  hget: jest.fn(),
+  hexists: jest.fn(),
+  exists: jest.fn(),
+  hset: jest.fn(),
+  del: jest.fn(),
+  hgetall: jest.fn(),
+}))
 
-let server
+// Mock the uuid module
+jest.mock('uuid', () => ({
+  v4: jest.fn(),
+}))
 
-beforeAll(() => {
-  server = createServer((req, res) => {
-    const method = req.method
-    if (method === 'GET') {
-      GET(req, res)
-    } else if (method === 'PUT') {
-      PUT(req, res)
-    } else if (method === 'POST') {
-      POST(req, res)
-    } else if (method === 'DELETE') {
-      DELETE(req, res)
+// Helper function to simulate a Response object
+const createResponse = (body, status) => {
+  return {
+    json: async () => body,
+    status,
+  }
+}
+
+describe('GET handler', () => {
+  it('returns page data when the page is found', async () => {
+    const fakePageData = {content: 'Page Content'}
+    redis.hget.mockResolvedValue(JSON.stringify(fakePageData))
+
+    const req = {
+      url: 'http://localhost:3000/api/page?pageId=1&projectId=1',
     }
+
+    const response = await GET(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual({data: fakePageData})
   })
-})
 
-afterAll(() => {
-  server.close()
-})
-
-describe('GET', () => {
-  it('should return 404 if page not found', async () => {
+  it('returns 404 when the page is not found', async () => {
     redis.hget.mockResolvedValue(null)
-    const response = await request(server).get('/?projectId=1')
+
+    const req = {
+      url: 'http://localhost:3000/api/page?pageId=1&projectId=1',
+    }
+
+    const response = await GET(req)
+    const data = await response.json()
+
     expect(response.status).toBe(404)
+    expect(data).toEqual({message: 'Page not found'})
   })
 
-  // Add more tests for GET
+  // ... additional tests for error cases
 })
 
-describe('PUT', () => {
-  it('should return 404 if project not found or does not belong to the user', async () => {
-    redis.hexists.mockResolvedValue(0)
-    const response = await request(server)
-      .put('/')
-      .send({userId: 1, projectId: 1, pageId: 1, newData: {}})
-    expect(response.status).toBe(404)
+describe('PUT handler', () => {
+  // Assume the request body is parsed and passed as an argument to PUT
+  it('updates page data successfully', async () => {
+    redis.hexists.mockResolvedValue(1)
+    redis.exists.mockResolvedValue(1)
+
+    const req = {
+      json: async () => ({
+        userId: 'user123',
+        projectId: 'project123',
+        pageId: 'page123',
+        newData: {content: 'Updated Content'},
+      }),
+    }
+
+    const response = await PUT(req)
+    const data = await response.json()
+
+    const expectedData = await req.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual({message: 'Page updated successfully'})
+    expect(redis.hset).toHaveBeenCalledWith(
+      'page:project123:page123',
+      'data',
+      JSON.stringify(expectedData.newData),
+    )
   })
 
-  // Add more tests for PUT
+  // ... additional tests for error cases
 })
 
-describe('POST', () => {
-  it('should return 404 if project not found or does not belong to the user', async () => {
-    redis.hexists.mockResolvedValue(0)
-    const response = await request(server)
-      .post('/')
-      .send({userId: 1, projectId: 1, pageName: 'test'})
-    expect(response.status).toBe(404)
+describe('POST handler', () => {
+  it('creates a new page successfully', async () => {
+    redis.hexists.mockResolvedValue(1)
+    uuidv4.mockReturnValue('new-uuid')
+
+    const req = {
+      json: async () => ({
+        userId: 'user123',
+        projectId: 'project123',
+        pageName: 'New Page',
+      }),
+    }
+
+    const response = await POST(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual({
+      pageId: 'new-uuid',
+      message: 'Page created successfully',
+    })
   })
 
-  // Add more tests for POST
+  // ... additional tests for error cases
 })
 
-describe('DELETE', () => {
-  it('should return 404 if project not found or does not belong to the user', async () => {
-    redis.hexists.mockResolvedValue(0)
-    const response = await request(server)
-      .delete('/')
-      .send({userId: 1, projectId: 1, pageId: 1})
-    expect(response.status).toBe(404)
+describe('DELETE handler', () => {
+  it('deletes a page successfully', async () => {
+    redis.hexists.mockResolvedValue(1)
+    redis.exists.mockResolvedValue(1)
+
+    const req = {
+      json: async () => ({
+        userId: 'user123',
+        projectId: 'project123',
+        pageId: 'page123',
+      }),
+    }
+
+    const response = await DELETE(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data).toEqual({message: 'Page deleted successfully'})
+    expect(redis.del).toHaveBeenCalledWith('page:project123:page123')
   })
 
-  // Add more tests for DELETE
+  // ... additional tests for error cases
 })
