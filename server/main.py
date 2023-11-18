@@ -5,11 +5,6 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from dotenv import load_dotenv
 load_dotenv()
-from os import environ
-import json
-import async_timeout
-import asyncio
-
 from openai import AsyncOpenAI
 from app_types import Message, ImageMessage, Conversation
 
@@ -28,17 +23,6 @@ app.add_middleware(
 )
 
 
-
-async def stream_generator(subscription):
-    async with async_timeout.timeout(GENERATION_TIMEOUT_SEC):
-        try:
-            async for chunk in subscription:
-                if(chunk.choices[0].delta.content == None):
-                    break
-                yield chunk.choices[0].delta.content
-        except asyncio.TimeoutError:
-            raise HTTPException(status_code=504, detail="Stream timed out")
-
 @app.post("/chat")
 async def text_chat(conversation: Conversation):
     # Message conversion:
@@ -47,6 +31,18 @@ async def text_chat(conversation: Conversation):
         msg = conversation.messages[i]
         if isinstance(msg, ImageMessage):
             conversation.messages[i] = Message(role=msg.role, content = msg.content[0].text)
+
+    systemMessage = Message(
+        role="system",
+        content="""
+You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS. 
+Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given. 
+Ensure that all generated HTML is valid and can be rendered correctly with TailwindCSS.
+"""
+    )
+
+    # Insert into beginning of conversation
+    conversation.messages.insert(0, systemMessage)
        
     if conversation.type == "text":
         response = await client.chat.completions.create(
