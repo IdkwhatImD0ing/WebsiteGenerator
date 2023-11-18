@@ -7,7 +7,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const addMessage = newMessage => {
-    setMessages([...messages, newMessage]);
+    setMessages([...messages, { text: newMessage, from: 'user' }]);
   };
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,7 +26,7 @@ export default function Chat() {
       <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
         {messages.map((message, index) => (
-          <p key={index}>{message}</p>
+          <p key={index}>{message.text}</p>
         ))}
         <div ref={messagesEndRef} />
       </Box>

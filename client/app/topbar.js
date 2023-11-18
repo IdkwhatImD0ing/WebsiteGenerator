@@ -1,6 +1,7 @@
-import { UserButton, auth, currentUser } from '@clerk/nextjs';
+'use client';
+import { UserButton, useAuth } from '@clerk/nextjs';
 export default function TopBar() {
-  const { userId } = auth();
+  const { userId } = useAuth();
   return (
     <div>
       <div>
