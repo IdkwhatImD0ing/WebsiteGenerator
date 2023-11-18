@@ -7,15 +7,20 @@ import axios from 'axios';
 export default function Chat({
   messages,
   setMessages,
+  html,
   setHtml,
   setCss,
   setJs
 }) {
   const messagesEndRef = useRef(null);
   const addMessage = async newMessage => {
-    const newMessages = [...messages, { content: newMessage, role: 'user' }];
+    const messageToChat = newMessage;
     setMessages([...messages, { content: newMessage, role: 'user' }]);
-    const conversation = { type: 'text', messages: newMessages };
+    const newMessagesToChat = [
+      ...messages,
+      { content: messageToChat, role: 'user' }
+    ];
+    const conversation = { type: 'text', messages: newMessagesToChat };
     const response = await axios.post(
       'http://localhost:8000/chat',
       conversation,
@@ -25,7 +30,8 @@ export default function Chat({
         }
       }
     );
-    setHtml(response);
+    console.log(response);
+    setHtml(response.data);
   };
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -44,9 +50,9 @@ export default function Chat({
       <h1>Chat</h1>
       <Box flexGrow='1' overflow='auto'>
         {messages != null &&
-          messages.map((message, index) => (
-            <p key={index}>{message.content}</p>
-          ))}
+          messages
+            .filter(message => message.role === 'user')
+            .map((message, index) => <p key={index}>{message.content}</p>)}
         <div ref={messagesEndRef} />
       </Box>
       <TextInput addMessage={addMessage} />
