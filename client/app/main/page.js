@@ -14,7 +14,7 @@ import {
   MenuItem,
   Stack
 } from '@mui/material';
-import { useState } from 'react';
+import {useState} from 'react';
 
 export default function Page() {
   const [showChat, setShowChat] = useState(true);
@@ -22,17 +22,14 @@ export default function Page() {
   const [framework, setFramework] = useState('html');
 
   const [messages, setMessages] = useState([]);
-  const handleChange = event => {
-    setFramework(event.target.value);
-  };
+  const handleChange = event => { setFramework(event.target.value); };
 
   return (
     <div>
       <TopBar />
       <Stack
-        direction='row'
-        spacing={2}
-        justifyContent='space-between'
+  direction = 'row'
+  spacing = {2} justifyContent = 'space-between'
         alignItems='center'
       >
         <Sidebar />
@@ -71,7 +68,8 @@ export default function Page() {
               setHtml={setHtml}
             />
           ) : (
-            <Editor html={html} setHtml={setHtml} />
+            <Editor html={html} setHtml={
+    setHtml} />
           )}
           <Button
             variant='contained'
