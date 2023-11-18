@@ -17,8 +17,6 @@ import { useState } from 'react';
 export default function Page() {
   const [showChat, setShowChat] = useState(true);
   const [html, setHtml] = useState('<h1> This is a header </h1>');
-  const [css, setCss] = useState('');
-  const [js, setJs] = useState('');
   const [framework, setFramework] = useState('html');
   const [messages, setMessages] = useState([]);
   const handleChange = event => {
@@ -62,24 +60,15 @@ export default function Page() {
               html={html}
               setMessages={setMessages}
               setHtml={setHtml}
-              setCss={setCss}
-              setJs={setJs}
             />
           ) : (
-            <Editor
-              html={html}
-              css={css}
-              js={js}
-              setHtml={setHtml}
-              setCss={setCss}
-              setJs={setJs}
-            />
+            <Editor html={html} setHtml={setHtml} />
           )}
           <Button
             variant='contained'
             sx={{
-              backgroundColor: 'orange',
-              '&:hover': { backgroundColor: 'darkorange' }
+              backgroundColor: 'green',
+              '&:hover': { backgroundColor: 'darkgreen' }
             }}
             height='10px'
             onClick={() => setShowChat(!showChat)}
@@ -87,7 +76,7 @@ export default function Page() {
             Switch to {showChat ? 'Editor' : 'Chat'}
           </Button>
         </Box>
-        <Renderer html={html} css={css} js={js} />
+        <Renderer html={html} />
       </Box>
     </div>
   );

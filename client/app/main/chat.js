@@ -5,14 +5,7 @@ import ChatMessageBox from './chatMessageBox';
 import TextInput from './textInput';
 import axios from 'axios';
 
-export default function Chat({
-  messages,
-  setMessages,
-  html,
-  setHtml,
-  setCss,
-  setJs
-}) {
+export default function Chat({ messages, setMessages, html, setHtml }) {
   const addMessage = async newMessage => {
     const messageToChat = newMessage + `\nThe current html is \n${html}`;
     console.log(messageToChat);

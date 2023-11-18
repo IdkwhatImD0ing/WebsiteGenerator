@@ -2,10 +2,8 @@
 import { Box, TextField, Button } from '@mui/material';
 import AceEditor from 'react-ace';
 import { useState } from 'react';
-export default function Editor({ html, css, js, setHtml, setCss, setJs }) {
+export default function Editor({ html, setHtml }) {
   const [htmlText, setHtmlText] = useState(html);
-  const [cssText, setCssText] = useState(css);
-  const [jsText, setJsText] = useState(js);
 
   const handleChange = (newValue, setter) => {
     setter(newValue);
@@ -13,8 +11,6 @@ export default function Editor({ html, css, js, setHtml, setCss, setJs }) {
 
   const refresh = () => {
     setHtml(htmlText);
-    setCss(cssText);
-    setJs(jsText);
   };
 
   return (

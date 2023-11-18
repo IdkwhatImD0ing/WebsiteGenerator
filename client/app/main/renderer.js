@@ -2,7 +2,7 @@
 
 import { Box } from '@mui/material';
 
-export default function Renderer({ html, css, js }) {
+export default function Renderer({ html }) {
   return (
     <Box
       key='renderer'
