@@ -23,12 +23,12 @@ export default function Page() {
       <Stack direction="row" spacing={2}>
         <Button onClick={() => setShowChat(!showChat)}>Toggle</Button>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-label">Framework</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={language}
-            label="Language"
+            value={framework}
+            label="Framework"
             onChange={handleChange}
             sx={{width: '150px'}}
           >
