@@ -6,6 +6,15 @@ import TextInput from './textInput';
 import axios from 'axios';
 
 export default function Chat({ messages, setMessages, html, setHtml }) {
+  const removeMarkdown = str => {
+    if (str.startsWith('```html')) {
+      str = str.slice(7);
+    }
+    if (str.endsWith('```')) {
+      str = str.slice(0, -3);
+    }
+    return str;
+  };
   const addMessage = async newMessage => {
     const messageToChat = newMessage + `\nThe current html is \n${html}`;
     console.log(messageToChat);
@@ -25,8 +34,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       }
     );
     console.log(response);
-    // TODO: check for markdown
-    setHtml(response.data.slice(7, -3));
+    setHtml(removeMarkdown(response.data));
   };
   return (
     <Box
