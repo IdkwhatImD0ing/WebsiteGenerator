@@ -13,22 +13,25 @@ import { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from "@mui/icons-material/Close";
+import { useAuth } from '@clerk/clerk-react';
 
 export default function Sidebar({}) {
   const [projects, setProjects] = useState(["proj1", "proj2", "proj3"]);
   const [selectedProjectId, setSelectedProjectId] = useState(1);
   const [pages, setPages] = useState(["page1", "page2", "page3"]);
   const [open, setOpen] = useState(false);
+  const { userId } = useAuth(); // Call useAuth at the top level
 
   useEffect(() => {
-    fetchProjects()
-  }, []);
+      fetchProjects(); // Pass user.id to fetchProjects
+    }, []);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/page", {
-        headers: { "Content-Type": "application/json" },
-      });
+        console.log("user3", userId);
+        const response = await axios.get(`api/projects?userId=${userId}`, {
+            headers: { "Content-Type": "application/json" },
+        });
       console.log(response);
       setProjects(response.data);
     } catch (error) {
