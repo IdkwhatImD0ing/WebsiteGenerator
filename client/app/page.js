@@ -1,9 +1,8 @@
 import { auth } from "@clerk/nextjs";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Typography } from "@mui/material";
-import Image from "next/image";
 
 export default function Home() {
   const { userId } = auth();
@@ -19,18 +18,17 @@ export default function Home() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      sx={{
-        backgroundImage: "linear-gradient(to right, #ff6e7f, #bfe9ff)",
-      }}
+      sx={{ backgroundImage: "linear-gradient(to right, #ff6e7f, #bfe9ff)" }}
       position="relative"
     >
+      {" "}
       <Image
         priority={true}
         src="/window.png"
         alt="window "
         layout="fill"
         objectFit="cover"
-      />
+      />{" "}
       <Box
         position="absolute"
         width="100vw"
@@ -40,6 +38,7 @@ export default function Home() {
             "linear-gradient(to bottom, rgba(255, 99, 71, 0.3), rgba(12, 15, 15, 0.5))",
         }}
       >
+        {" "}
         <Box
           sx={{
             position: "absolute",
@@ -58,7 +57,6 @@ export default function Home() {
             <Button variant="contained">Sign Up</Button>
           </Link>
         </Box>
-
         <Box
           display="flex"
           flexDirection="column"
@@ -77,12 +75,11 @@ export default function Home() {
             WebWeaver
           </Typography>
           <Typography variant="h6" margin={10} color="white">
-            WebWeaver is an AI-powered website generation tool that enables
+            WebWeaver is an AI - powered website generation tool that enables
             seamless collaboration with an AI chatbox to design, edit, and
-            refine your ideal website in real-time.
+            refine your ideal website in real - time.
           </Typography>
         </Box>
-
         <Box
           sx={{
             position: "absolute",
@@ -94,6 +91,7 @@ export default function Home() {
             flexDirection: "row",
           }}
         >
+          {" "}
           <Link href="/main" passHref>
             <Button variant="contained">Sign In</Button>
           </Link>
