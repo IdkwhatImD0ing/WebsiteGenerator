@@ -41,7 +41,7 @@ def extract_html(content):
         code_block = after_html.split("```", 1)[0]
         return code_block.strip()
     else:
-        return "No HTML code block found"
+        return content
 
 
 @app.post("/chat")
