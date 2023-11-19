@@ -17,7 +17,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DrawingCanvas from "./canvas";
 
-export default function Chat({ messages, setMessages, html, setHtml }) {
+export default function Chat({
+  messages,
+  setMessages,
+  html,
+  setHtml,
+  chatObject,
+  setChatObject,
+}) {
+  const { userId } = useAuth(); // Call useAuth at the top level
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -52,24 +60,44 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
   const addMessage = async (newMessage) => {
     if (!image) {
       const messageToChat = newMessage + `\nThe current html is \n${html}`;
-      console.log(messageToChat);
-      setMessages([...messages, { content: newMessage, role: "user" }]);
       const newMessagesToChat = [
         ...messages,
         { content: messageToChat, role: "user" },
       ];
-      const conversation = { type: "text", messages: newMessagesToChat };
+      const userMessages = [...messages, { content: newMessage, role: "user" }];
+      setMessages(userMessages);
+
+      const conversation = {
+        type: "text",
+        messages: processMessages(newMessagesToChat),
+      };
+      console.log("conversation", conversation);
       const response = await axios.post(
         "http://localhost:8000/chat",
         conversation,
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log(response);
-      setHtml(response.data);
+
+      const newMessages = [
+        ...userMessages,
+        { content: response.data, role: "assistant" },
+      ];
+      const newChatObject = {
+        ...chatObject,
+        messages: newMessages,
+        currentVersion: response.data,
+      };
+      setChatObject(newChatObject);
+      const body = {
+        projectId: userId,
+        pageId: chatObject.id,
+        newData: newChatObject,
+      };
+      await axios.put("/api/page", body, {
+        headers: { "Content-Type": "application/json" },
+      });
     } else {
       const base64Image = await getBase64(image);
-      console.log(base64Image);
-      setMessages([...messages, { content: newMessage, role: "user" }]);
 
       const newMessagesToChat = [
         ...messages,
@@ -84,15 +112,38 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
           role: "user",
         },
       ];
-      const conversation = { type: "image", messages: newMessagesToChat };
+      const userMessages = [...messages, { content: newMessage, role: "user" }];
+      setMessages(userMessages);
+
+      const conversation = {
+        type: "image",
+        messages: processMessages(newMessagesToChat),
+      };
       const response = await axios.post(
         "http://localhost:8000/chat",
         conversation,
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log(response);
       setImage(null);
-      setHtml(response.data);
+      const newMessages = [
+        ...userMessages,
+        { content: response.data, role: "assistant" },
+      ];
+      const newChatObject = {
+        ...chatObject,
+        messages: newMessages,
+        currentVersion: response.data,
+      };
+      setChatObject(newChatObject);
+
+      const body = {
+        projectId: userId,
+        pageId: chatObject.id,
+        newData: newChatObject,
+      };
+      await axios.put("/api/page", body, {
+        headers: { "Content-Type": "application/json" },
+      });
     }
   };
   return (
@@ -211,7 +262,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       <Box display="flex">
         <input
           accept="image/ * "
-          style={{ display: "none" }}
+          style={{display: 'none'}}
           id="raised-button-file"
           multiple={false}
           type="file"
@@ -225,7 +276,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
             <p>{image.name}</p>
             <Button
               onClick={() => {
-                setImage(null);
+                setImage(null)
               }}
             >
               Remove Image
@@ -236,3 +287,22 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
     </Box>
   );
 }
+
+// Function to process messages
+const processMessages = (messages) => {
+  let assistantMessageCount = 0;
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === "assistant") {
+      assistantMessageCount++;
+      if (assistantMessageCount > 3) {
+        messages[i] = {
+          ...messages[i],
+          content: "generated html but removed for brevity",
+        };
+      }
+    }
+  }
+
+  return messages;
+};
