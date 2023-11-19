@@ -1,14 +1,14 @@
-import { auth } from "@clerk/nextjs";
-import { Box, Button, Typography } from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import {auth} from '@clerk/nextjs'
+import {Box, Button, Typography, Stack} from '@mui/material'
+import Image from 'next/image'
+import Link from 'next/link'
+import {redirect} from 'next/navigation'
 
 export default function Home() {
-  const { userId } = auth();
+  const {userId} = auth()
 
   if (userId) {
-    redirect("/main");
+    redirect('/main')
   }
   return (
     <Box
@@ -18,36 +18,36 @@ export default function Home() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      sx={{ backgroundImage: "linear-gradient(to right, #ff6e7f, #bfe9ff)" }}
+      sx={{backgroundImage: 'linear-gradient(to right, #ff6e7f, #bfe9ff)'}}
       position="relative"
     >
-      {" "}
+      {' '}
       <Image
         priority={true}
-        src="/window.png"
+        src="/desk.png"
         alt="window "
         layout="fill"
         objectFit="cover"
-      />{" "}
+      />{' '}
       <Box
         position="absolute"
         width="100vw"
         height="100vh"
         sx={{
           backgroundImage:
-            "linear-gradient(to bottom, rgba(255, 99, 71, 0.3), rgba(12, 15, 15, 0.5))",
+            'linear-gradient(to bottom, rgba(255, 99, 71, 0.3), rgba(12, 15, 15, 0.5))',
         }}
       >
-        {" "}
-        <Box
+        {' '}
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="flex-end"
           sx={{
-            position: "absolute",
-            top: "0",
-            right: "0",
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            flexDirection: "row",
+            position: 'absolute',
+            top: 10,
+            right: 10,
           }}
         >
           <Link href="/main" passHref>
@@ -56,7 +56,7 @@ export default function Home() {
           <Link href="/sign-up" passHref>
             <Button variant="contained">Sign Up</Button>
           </Link>
-        </Box>
+        </Stack>
         <Box
           display="flex"
           flexDirection="column"
@@ -80,26 +80,7 @@ export default function Home() {
             refine your ideal website in real - time.
           </Typography>
         </Box>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "0",
-            right: "0",
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          {" "}
-          <Link href="/main" passHref>
-            <Button variant="contained">Sign In</Button>
-          </Link>
-          <Link href="/sign-up" passHref>
-            <Button variant="contained">Sign Up</Button>
-          </Link>
-        </Box>
       </Box>
     </Box>
-  );
+  )
 }

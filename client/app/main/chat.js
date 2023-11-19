@@ -17,7 +17,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import DrawingCanvas from './canvas'
 import {useAuth} from '@clerk/nextjs'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 
 export default function Chat({
   messages,
@@ -31,7 +31,7 @@ export default function Chat({
   const [open, setOpen] = useState(false)
   const [image, setImage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleImageChange = (event) => {
@@ -78,7 +78,7 @@ export default function Chat({
       }
       console.log('conversation', conversation)
       const response = await axios.post(
-        'http://localhost:8000/chat',
+        'https://webweaver-405518.uc.r.appspot.com/chat',
         conversation,
         {headers: {'Content-Type': 'application/json'}},
       )
@@ -125,7 +125,7 @@ export default function Chat({
         messages: processMessages(newMessagesToChat),
       }
       const response = await axios.post(
-        'http://localhost:8000/chat',
+        'https://webweaver-405518.uc.r.appspot.com/chat',
         conversation,
         {headers: {'Content-Type': 'application/json'}},
       )
@@ -170,12 +170,12 @@ export default function Chat({
         <Button
           style={{display: 'none'}}
           id="open-modal"
-          onClick={()=>{
+          onClick={() => {
             if (image !== null) {
               setImage(null)
             } else {
               handleOpen()
-            } 
+            }
           }}
         />
 
@@ -185,9 +185,11 @@ export default function Chat({
             <InputAdornment position="start">
               <label htmlFor="open-modal">
                 <IconButton component="span" color="primary.main">
-                  {
-                    image !== null  ? <HighlightOffIcon color="primary.main" /> : <AddCircleOutlineIcon color="primary.main" />
-                  }
+                  {image !== null ? (
+                    <HighlightOffIcon color="primary.main" />
+                  ) : (
+                    <AddCircleOutlineIcon color="primary.main" />
+                  )}
                 </IconButton>
               </label>
             </InputAdornment>
