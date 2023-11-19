@@ -1,12 +1,20 @@
 "use client";
-import { Box, Paper, Button, Modal, Typography, IconButton, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Button,
+  Modal,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import ChatMessageBox from "./chatMessageBox";
 import TextInput from "./textInput";
 import axios from "axios";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CloseIcon from '@mui/icons-material/Close';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DrawingCanvas from "./canvas";
 
 export default function Chat({ messages, setMessages, html, setHtml }) {
@@ -40,7 +48,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       }
     };
   }, [image]);
-  
+
   const addMessage = async (newMessage) => {
     if (!image) {
       const messageToChat = newMessage + `\nThe current html is \n${html}`;
@@ -54,7 +62,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       const response = await axios.post(
         "http://localhost:8000/chat",
         conversation,
-        { headers: { "Content-Type": "application/json" } },
+        { headers: { "Content-Type": "application/json" } }
       );
       console.log(response);
       setHtml(response.data);
@@ -80,7 +88,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       const response = await axios.post(
         "http://localhost:8000/chat",
         conversation,
-        { headers: { "Content-Type": "application/json" } },
+        { headers: { "Content-Type": "application/json" } }
       );
       console.log(response);
       setImage(null);
@@ -102,99 +110,103 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
         <ChatMessageBox messages={messages} />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-      <Button
-        style={{ display: "none" }}
-        id="open-modal"
-        onClick={handleOpen}
-      />
-      
-      <TextInput
-        addMessage={addMessage}
-        startAdornment={
-          
+        <Button
+          style={{ display: "none" }}
+          id="open-modal"
+          onClick={handleOpen}
+        />
+
+        <TextInput
+          addMessage={addMessage}
+          startAdornment={
             <InputAdornment position="start">
               <label htmlFor="open-modal">
                 <IconButton component="span" color="primary.main">
-                  <AddCircleOutlineIcon color="primary.main"/>
+                  <AddCircleOutlineIcon color="primary.main" />
                 </IconButton>
               </label>
             </InputAdornment>
-          
-        }
-      />
+          }
+        />
 
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={{  
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: "80vw",
-          height: "80vh",
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 2
-        }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {/* Upload your sketch here! */}
-          </Typography>
-          <Box 
-         position="absolute"
-          top={0}
-          right={0} 
-          display="flex" flexDirection="column" alignItems="flex-end">
-            <input
-              accept="image/*"
-              style={{ display: "none" }}
-              id="raised-button-file"
-              multiple={false}
-              type="file"
-              onChange={handleImageChange}
-            />
-            {image ? (
-              <IconButton
-                componnt="span"
-              onClick={() => {
-                setImage(null); // Remove the image when the close icon is clicked
-              }}
-              color="primary"
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "80vw",
+              height: "80vh",
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 2,
+            }}
+          >
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {/* Upload your sketch here! */}
+            </Typography>
+            <Box
+              position="absolute"
+              top={0}
+              right={0}
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-end"
             >
-              <CloseIcon />
-            </IconButton>
-            ) : (
-              <label htmlFor="raised-button-file">
-                <IconButton component="span" color="primary.main">
-                  <UploadFileIcon color="primary.main"/>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                id="raised-button-file"
+                multiple={false}
+                type="file"
+                onChange={handleImageChange}
+              />
+              {image ? (
+                <IconButton
+                  componnt="span"
+                  onClick={() => {
+                    setImage(null); // Remove the image when the close icon is clicked
+                  }}
+                  color="primary"
+                >
+                  <CloseIcon />
                 </IconButton>
-              </label>
-            )}
+              ) : (
+                <label htmlFor="raised-button-file">
+                  <IconButton component="span" color="primary.main">
+                    <UploadFileIcon color="primary.main" />
+                  </IconButton>
+                </label>
+              )}
               <Box textAlign="right">
                 <IconButton component="span" color="primary.main">
-                  <CloseIcon color="primary.main"/>
+                  <CloseIcon color="primary.main" />
                 </IconButton>
               </Box>
-          </Box>
-          <Box flex={1} height="100%" width="100%">
-          {image ? (
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <img src={URL.createObjectURL(image)} alt="Uploaded" style={{ width: 'auto', height: '50vh' }} />
-
             </Box>
-          ):(
-            <DrawingCanvas onDrawingComplete={setImage}/>
-          )}
+            <Box flex={1} height="100%" width="100%">
+              {image ? (
+                <Box display="flex" alignItems="center" justifyContent="center">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Uploaded"
+                    style={{ width: "auto", height: "50vh" }}
+                  />
+                </Box>
+              ) : (
+                <DrawingCanvas onDrawingComplete={setImage} />
+              )}
+            </Box>
           </Box>
-        </Box>
-      </Modal>
-
-    </Box>
+        </Modal>
+      </Box>
       {/* <TextInput addMessage={addMessage} />
       <Box display="flex">
         <input
