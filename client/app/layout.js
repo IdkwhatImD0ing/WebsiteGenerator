@@ -1,5 +1,6 @@
 import {ClerkProvider} from '@clerk/nextjs'
 import './globals.css'
+import CustomTheme from './theme'
 
 export const metadata = {
   title: 'Create Next App',
@@ -10,7 +11,9 @@ export default function RootLayout({children}) {
   return (
     <ClerkProvider>
       <html lang="en">
+        <CustomTheme>
         <body>{children}</body>
+        </CustomTheme>
       </html>
     </ClerkProvider>
   )
