@@ -3,9 +3,12 @@ import { SignIn } from "@clerk/nextjs";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
+import { useTheme } from "@mui/material/styles";
 
 export default function Page() {
   const { isLoaded } = useAuth();
+  const theme = useTheme();
+
   return (
     <Box
       key="signup"
@@ -28,7 +31,7 @@ export default function Page() {
           height="100vh"
           padding={0}
           margin={0}
-          backgroundColor="white"
+          backgroundColor="background.inverted"
           display="flex"
           flexDirection="row"
           justifyContent="space-between"

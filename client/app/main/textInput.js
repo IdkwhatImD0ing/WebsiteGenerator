@@ -1,9 +1,9 @@
-"use client";
+// TextInput.js
 import { useState } from "react";
 import { Box, TextField, InputAdornment, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
-export default function TextInput({ addMessage }) {
+export default function TextInput({ addMessage, startAdornment }) {
   const [inputText, setInputText] = useState("");
 
   const handleChange = (e) => {
@@ -27,24 +27,26 @@ export default function TextInput({ addMessage }) {
     <Box
       component="form"
       noValidate
-      autoComplete="false"
+      autoComplete="off"
       onSubmit={handleSubmit}
-      style={{ margin: "10px" }}
+      style={{ padding: "10px" }} 
+      display="flex"
+      flexGrow={1}
     >
-      {" "}
       <TextField
-        placeholder="Type"
+        placeholder="Type your message"
         variant="outlined"
         multiline
         fullWidth
-        margin="normal"
+        margin="none" // Changed from normal to none to remove extra space
         value={inputText}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         InputProps={{
+          startAdornment: startAdornment, // This is where we add the startAdornment prop
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={handleSubmit}>
+              <IconButton type="submit">
                 <SendIcon />
               </IconButton>
             </InputAdornment>
