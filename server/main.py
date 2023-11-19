@@ -27,6 +27,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def extract_html(content):
+    if "```html" in content:
+        # Split the content by ```html and take the second part
+        after_html = content.split("```html", 1)[1]
+        # Now split by ``` and take the first part
+        code_block = after_html.split("```", 1)[0]
+        return code_block.strip()
+    else:
+        return "No HTML code block found"
 
 @app.post("/chat")
 async def text_chat(conversation: Conversation):
@@ -59,7 +68,7 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
+        return JSONResponse(content=extract_html(response.choices[0].message.content),
                             status_code=200)
     else:
         response = await client.chat.completions.create(
@@ -69,5 +78,5 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
+        return JSONResponse(content=extract_html(response.choices[0].message.content),
                             status_code=200)

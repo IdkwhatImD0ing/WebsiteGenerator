@@ -6,15 +6,6 @@ import TextInput from './textInput';
 import axios from 'axios';
 
 export default function Chat({ messages, setMessages, html, setHtml }) {
-  const removeMarkdown = str => {
-    if (str.startsWith('```html')) {
-      str = str.slice(7);
-    }
-    if (str.endsWith('```')) {
-      str = str.slice(0, -3);
-    }
-    return str;
-  };
   const [image, setImage] = useState(null);
   const handleImageChange = event => {
     const file = event.target.files[0];
@@ -50,7 +41,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
         { headers: { 'Content-Type': 'application/json' } }
       );
       console.log(response);
-      setHtml(removeMarkdown(response.data));
+      setHtml(response.data);
     } else {
       const base64Image = await getBase64(image);
       console.log(base64Image);
@@ -82,7 +73,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       );
       console.log(response);
       setImage(null);
-      setHtml(removeMarkdown(response.data));
+      setHtml(response.data);
     }
   };
   return (
