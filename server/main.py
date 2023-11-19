@@ -28,6 +28,22 @@ app.add_middleware(
 )
 
 
+def extract_html(content):
+    """
+
+    :param content:
+
+    """
+    if "```html" in content:
+        # Split the content by ```html and take the second part
+        after_html = content.split("```html", 1)[1]
+        # Now split by ``` and take the first part
+        code_block = after_html.split("```", 1)[0]
+        return code_block.strip()
+    else:
+        return content
+
+
 @app.post("/chat")
 async def text_chat(conversation: Conversation):
     # Message conversion:
@@ -35,15 +51,17 @@ async def text_chat(conversation: Conversation):
         # Convert all image messages to messages except the last one
         msg = conversation.messages[i]
         if isinstance(msg, ImageMessage):
-            conversation.messages[i] = Message(role=msg.role,
-                                               content=msg.content[0].text)
+            conversation.messages[i] = Message(
+                role=msg.role, content=msg.content[0].text
+            )
 
     systemMessage = Message(
         role="system",
         content="""
-You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS. 
-Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given. 
+You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS.
+Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given.
 Ensure that all generated HTML is valid and can be rendered correctly with TailwindCSS. You will be given the current HTML code that the user has written. Always return the complete code, not just the code to add on. Also do not include markdown in your response. Only include the HTML.
+Do not give an introduction or explanation. Just give the code.
 """,
     )
 
@@ -58,8 +76,9 @@ Ensure that all generated HTML is valid and can be rendered correctly with Tailw
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
-                            status_code=200)
+        return JSONResponse(
+            content=extract_html(response.choices[0].message.content), status_code=200
+        )
     else:
         response = await client.chat.completions.create(
             model="gpt-4-vision-preview",
@@ -68,5 +87,6 @@ Ensure that all generated HTML is valid and can be rendered correctly with Tailw
             temperature=0,
         )
 
-        return JSONResponse(content=response.choices[0].message.content,
-                            status_code=200)
+        return JSONResponse(
+            content=extract_html(response.choices[0].message.content), status_code=200
+        )
