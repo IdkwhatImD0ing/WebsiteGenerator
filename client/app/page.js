@@ -52,10 +52,10 @@ export default function Home() {
           }}
         >
           <Link href="/sign-in" passHref>
-            <Button variant="contained">Sign-in</Button>
+            <Button variant="contained">Sign In</Button>
           </Link>
           <Link href="/sign-up" passHref>
-            <Button variant="contained">Sign-up</Button>
+            <Button variant="contained">Sign Up</Button>
           </Link>
         </Box>
 
