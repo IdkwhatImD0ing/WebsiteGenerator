@@ -81,6 +81,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
         { headers: { 'Content-Type': 'application/json' } }
       );
       console.log(response);
+      setImage(null);
       setHtml(removeMarkdown(response.data));
     }
   };
