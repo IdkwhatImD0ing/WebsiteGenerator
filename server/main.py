@@ -27,7 +27,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def extract_html(content):
+    """
+
+    :param content:
+
+    """
     if "```html" in content:
         # Split the content by ```html and take the second part
         after_html = content.split("```html", 1)[1]
@@ -36,6 +42,7 @@ def extract_html(content):
         return code_block.strip()
     else:
         return "No HTML code block found"
+
 
 @app.post("/chat")
 async def text_chat(conversation: Conversation):
@@ -50,8 +57,8 @@ async def text_chat(conversation: Conversation):
     systemMessage = Message(
         role="system",
         content="""
-You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS. 
-Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given. 
+You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS.
+Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given.
 Ensure that all generated HTML is valid and can be rendered correctly with TailwindCSS. You will be given the current HTML code that the user has written. Always return the complete code, not just the code to add on. Also do not include markdown in your response. Only include the HTML.
 Do not give an introduction or explanation. Just give the code.
 """,
@@ -68,7 +75,8 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=extract_html(response.choices[0].message.content),
+        return JSONResponse(content=extract_html(
+            response.choices[0].message.content),
                             status_code=200)
     else:
         response = await client.chat.completions.create(
@@ -78,5 +86,6 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=extract_html(response.choices[0].message.content),
+        return JSONResponse(content=extract_html(
+            response.choices[0].message.content),
                             status_code=200)
