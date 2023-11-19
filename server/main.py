@@ -31,7 +31,7 @@ app.add_middleware(
 def extract_html(content):
     """
 
-    :param content: 
+    :param content:
 
     """
     if "```html" in content:
