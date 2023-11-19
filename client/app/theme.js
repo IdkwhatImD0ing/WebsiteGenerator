@@ -31,5 +31,5 @@ const customTheme = () =>
   });
 
 export default function CustomTheme({ children }) {
-  return <ThemeProvider theme={customTheme()}>{children}</ThemeProvider>;
+  return <ThemeProvider theme={customTheme()}>{children} </ThemeProvider>;
 }

@@ -19,6 +19,7 @@ export default function Page() {
       alignItems="center"
       backgroundColor="primary.main"
     >
+      {" "}
       {!isLoaded ? (
         <CircularProgress />
       ) : (
