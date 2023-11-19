@@ -1,11 +1,11 @@
 "use client";
-import { Box, Paper, Button, Modal, Typography } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import {Box, Paper, Button, Modal, Typography} from "@mui/material";
+import {useState, useEffect, useRef} from "react";
 import ChatMessageBox from "./chatMessageBox";
 import TextInput from "./textInput";
 import axios from "axios";
 
-export default function Chat({ messages, setMessages, html, setHtml }) {
+export default function Chat({messages, setMessages, html, setHtml}) {
   const [image, setImage] = useState(null);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -29,42 +29,42 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
     if (!image) {
       const messageToChat = newMessage + `\nThe current html is \n${html}`;
       console.log(messageToChat);
-      setMessages([...messages, { content: newMessage, role: "user" }]);
+      setMessages([...messages, {content : newMessage, role : "user"} ]);
       const newMessagesToChat = [
         ...messages,
-        { content: messageToChat, role: "user" },
+        {content : messageToChat, role : "user"},
       ];
-      const conversation = { type: "text", messages: newMessagesToChat };
+      const conversation = {type : "text", messages : newMessagesToChat};
       const response = await axios.post(
-        "http://localhost:8000/chat",
-        conversation,
-        { headers: { "Content-Type": "application/json" } },
+          "http://localhost:8000/chat",
+          conversation,
+          {headers : {"Content-Type" : "application/json"}},
       );
       console.log(response);
       setHtml(response.data);
     } else {
       const base64Image = await getBase64(image);
       console.log(base64Image);
-      setMessages([...messages, { content: newMessage, role: "user" }]);
+      setMessages([...messages, {content : newMessage, role : "user"} ]);
 
       const newMessagesToChat = [
         ...messages,
         {
-          content: [
+          content : [
             {
-              type: "text",
-              text: newMessage + `\nThe current html is \n${html}`,
+              type : "text",
+              text : newMessage + `\nThe current html is \n${html}`,
             },
-            { type: "image_url", image_url: { url: base64Image } },
+            {type : "image_url", image_url : {url : base64Image}},
           ],
-          role: "user",
+          role : "user",
         },
       ];
-      const conversation = { type: "image", messages: newMessagesToChat };
+      const conversation = {type : "image", messages : newMessagesToChat};
       const response = await axios.post(
-        "http://localhost:8000/chat",
-        conversation,
-        { headers: { "Content-Type": "application/json" } },
+          "http://localhost:8000/chat",
+          conversation,
+          {headers : {"Content-Type" : "application/json"}},
       );
       console.log(response);
       setImage(null);
@@ -73,45 +73,46 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
   };
   return (
     <Box
-      key="chat"
-      backgroundColor="white"
-      color="black"
-      width="100%"
-      flexGrow="1"
-      display="flex"
-      flexDirection="column"
-    >
-      {" "}
-      <Box flexGrow="1" overflow="auto">
-        <ChatMessageBox messages={messages} />
-      </Box>
-      <TextInput addMessage={addMessage} />
+  key = "chat"
+  backgroundColor = "white"
+  color = "black"
+  width = "100%"
+  flexGrow = "1"
+  display = "flex"
+  flexDirection = "column" > {" "}<Box flexGrow = "1" overflow = "auto">
+                  <ChatMessageBox messages = { messages } />
+      </Box><
+                  TextInput addMessage = {
+    addMessage
+  } />
       <Box display="flex">
         <input
-          accept="image/
-      *"
-          style={{ display: "none" }}
-          id="raised-button-file"
-          multiple={false}
-          type="file"
-          onChange={handleImageChange}
-        />
+          accept="image/ * "
+  style = {
+    { display: "none" }
+  } id = "raised-button-file"
+  multiple = {false} type = "file"
+  onChange =
+  {
+    handleImageChange
+  } />
         <label htmlFor="raised-button-file">
-          <Button component="span">Upload Image</Button>
-        </label>
+          <Button component="span">Upload Image</Button >
+      </label>
         {image && (
           <Box display="flex">
-            <p>{image.name}</p>
-            <Button
+            <p>{image.name}</p><
+      Button
               onClick={() => {
-                setImage(null);
+    setImage(null);
               }}
             >
               Remove Image
             </Button>
           </Box>
-        )}
+        )
+}
       </Box>
     </Box>
   );
-}
+      }
