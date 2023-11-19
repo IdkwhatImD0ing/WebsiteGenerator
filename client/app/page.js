@@ -94,7 +94,7 @@ export default function Home() {
             flexDirection: "row",
           }}
         >
-          <Link href="/main" passHref>
+          <Link href="/sign-in" passHref>
             <Button variant="contained">Sign In</Button>
           </Link>
           <Link href="/sign-up" passHref>
