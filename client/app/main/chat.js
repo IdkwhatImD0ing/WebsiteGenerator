@@ -1,9 +1,11 @@
 "use client";
-import { Box, Paper, Button, Modal, Typography } from "@mui/material";
+import { Box, Paper, Button, Modal, Typography, IconButton, InputAdornment } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import ChatMessageBox from "./chatMessageBox";
 import TextInput from "./textInput";
 import axios from "axios";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Chat({ messages, setMessages, html, setHtml }) {
   const [image, setImage] = useState(null);
@@ -85,7 +87,42 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       <Box flexGrow="1" overflow="auto">
         <ChatMessageBox messages={messages} />
       </Box>
-      <TextInput addMessage={addMessage} />
+      <Box display="flex" flexDirection="row" alignItems="center">
+      <input
+        accept="image/*"
+        style={{ display: "none" }}
+        id="raised-button-file"
+        multiple={false}
+        type="file"
+        onChange={handleImageChange}
+      />
+      <TextInput
+        addMessage={addMessage}
+        startAdornment={
+          image ? (
+            <InputAdornment position="start">
+              <IconButton
+                onClick={() => {
+                  setImage(null); // Remove the image when the close icon is clicked
+                }}
+                color="primary"
+              >
+                <CloseIcon />
+              </IconButton>
+            </InputAdornment>
+          ) : (
+            <InputAdornment position="start">
+              <label htmlFor="raised-button-file">
+                <IconButton component="span" color="primary">
+                  <UploadFileIcon />
+                </IconButton>
+              </label>
+            </InputAdornment>
+          )
+        }
+      />
+    </Box>
+      {/* <TextInput addMessage={addMessage} />
       <Box display="flex">
         <input
           accept="image/ * "
@@ -110,7 +147,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
             </Button>
           </Box>
         )}
-      </Box>
+      </Box> */}
     </Box>
   );
 }
