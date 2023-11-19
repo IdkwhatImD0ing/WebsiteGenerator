@@ -28,9 +28,11 @@ export default function Chat({
 }) {
   const {userId} = useAuth() // Call useAuth at the top level
   const [open, setOpen] = useState(false)
+  const [image, setImage] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const [image, setImage] = useState(null)
   const handleImageChange = (event) => {
     const file = event.target.files[0]
 
@@ -59,6 +61,7 @@ export default function Chat({
   }, [image])
 
   const addMessage = async (newMessage) => {
+    setIsLoading(true)
     if (!image) {
       const messageToChat = newMessage + `\nThe current html is \n${html}`
       const newMessagesToChat = [
@@ -146,6 +149,7 @@ export default function Chat({
         headers: {'Content-Type': 'application/json'},
       })
     }
+    setIsLoading(false)
   }
   return (
     <Box
@@ -179,6 +183,8 @@ export default function Chat({
               </label>
             </InputAdornment>
           }
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
 
         <Modal

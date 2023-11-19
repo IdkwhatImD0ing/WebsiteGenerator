@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { Box, TextField, InputAdornment, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function TextInput({ addMessage, startAdornment }) {
+export default function TextInput({ addMessage, startAdornment, isLoading }) {
   const [inputText, setInputText] = useState("");
 
   const handleChange = (e) => {
@@ -47,7 +48,7 @@ export default function TextInput({ addMessage, startAdornment }) {
           endAdornment: (
             <InputAdornment position="end">
               <IconButton type="submit">
-                <SendIcon />
+                {isLoading ? <CircularProgress size={20} /> : <SendIcon />}
               </IconButton>
             </InputAdornment>
           ),
