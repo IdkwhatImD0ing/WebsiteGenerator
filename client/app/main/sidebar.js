@@ -23,8 +23,10 @@ export default function Sidebar({}) {
   const { userId } = useAuth(); // Call useAuth at the top level
 
   useEffect(() => {
+      if (userId){
       fetchProjects(); // Pass user.id to fetchProjects
-    }, []);
+      }
+    }, [userId]);
 
   const fetchProjects = async () => {
     try {
