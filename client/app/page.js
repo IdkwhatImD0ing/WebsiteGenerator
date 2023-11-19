@@ -65,12 +65,13 @@ export default function Home() {
           position="absolute"
           color="primary.red"
           alignItems="center"
+          width="100vw"
         >
           <Typography
             variant="h2"
             margin={5}
             paddingTop={20}
-            color="primary.blue"
+            color="white"
             fontWeight="bold"
           >
             WebWeaver
