@@ -25,6 +25,11 @@ app.add_middleware(
 
 
 def extract_html(content):
+    """
+
+    :param content: 
+
+    """
     if "```html" in content:
         # Split the content by ```html and take the second part
         after_html = content.split("```html", 1)[1]
