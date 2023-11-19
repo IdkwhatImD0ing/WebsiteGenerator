@@ -1,7 +1,7 @@
 'use client'
-import {SignUp} from '@clerk/nextjs'
-import {Box, CircularProgress} from '@mui/material'
-import {useAuth} from '@clerk/nextjs'
+import{SignUp} from '@clerk/nextjs'
+import{Box, CircularProgress} from '@mui/material'
+import{useAuth} from '@clerk/nextjs'
 import Image from 'next/image'
 import Stack from '@mui/material/Stack'
 
