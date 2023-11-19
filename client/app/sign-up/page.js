@@ -4,12 +4,19 @@ import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Stack from "@mui/material/Stack";
+<<<<<<< HEAD
+
+export default function Page() {
+  const { isLoaded } = useAuth();
+  // const theme = useTheme();
+=======
 import { useTheme } from "@mui/material/styles";
 
 export default function Page() {
   const { isLoaded } = useAuth();
   const theme = useTheme();
 
+>>>>>>> main
   return (
     <Box
       key="signup"
@@ -19,8 +26,13 @@ export default function Page() {
       flexDirection="row"
       justifyContent="center"
       alignItems="center"
+<<<<<<< HEAD
+      backgroundColor="primary.main"
+=======
       backgroundColor="background.inverted"
+>>>>>>> main
     >
+      {" "}
       {!isLoaded ? (
         <CircularProgress />
       ) : (
@@ -33,13 +45,20 @@ export default function Page() {
           height="100vh"
           padding={0}
           margin={0}
+<<<<<<< HEAD
+          backgroundColor="primary"
+=======
           backgroundColor="theme.palette.red.main"
+>>>>>>> main
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
+<<<<<<< HEAD
+=======
           {" "}
           {/* <Box width="50%" height="100%"> */}
+>>>>>>> main
           <div style={{ width: "50%", height: "100%", position: "relative" }}>
             <Image
               priority={true}
@@ -49,6 +68,21 @@ export default function Page() {
               objectFit="cover"
             />
           </div>
+<<<<<<< HEAD
+          <Box backgroundColor="primary">
+            <div
+              style={{
+                width: "50%",
+                height: "100%",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <SignUp />
+            </div>
+=======
           {/* </Box> */}
           <Box
             backgroundColor="theme.palette.red.main"
@@ -59,6 +93,7 @@ export default function Page() {
             justifyContent="center"
           >
             <SignUp />
+>>>>>>> main
           </Box>
         </Stack>
       )}
