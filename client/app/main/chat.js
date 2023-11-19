@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import ChatMessageBox from "./chatMessageBox";
 import TextInput from "./textInput";
 import axios from "axios";
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function Chat({ messages, setMessages, html, setHtml }) {
@@ -113,8 +113,8 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
           ) : (
             <InputAdornment position="start">
               <label htmlFor="raised-button-file">
-                <IconButton component="span" color="primary">
-                  <UploadFileIcon />
+                <IconButton component="span" color="primary.main">
+                  <AddCircleOutlineIcon color="primary.main"/>
                 </IconButton>
               </label>
             </InputAdornment>
