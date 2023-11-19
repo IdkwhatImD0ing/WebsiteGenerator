@@ -88,8 +88,7 @@ export default function Chat({ messages, setMessages, html, setHtml }) {
       <TextInput addMessage={addMessage} />
       <Box display="flex">
         <input
-          accept="image/
-      *"
+          accept="image/ * "
           style={{ display: "none" }}
           id="raised-button-file"
           multiple={false}
