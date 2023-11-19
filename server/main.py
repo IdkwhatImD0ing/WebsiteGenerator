@@ -31,7 +31,7 @@ app.add_middleware(
 def extract_html(content):
     """
 
-    :param content: 
+    :param content:
 
     """
     if "```html" in content:
@@ -58,8 +58,8 @@ async def text_chat(conversation: Conversation):
     systemMessage = Message(
         role="system",
         content="""
-You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS. 
-Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given. 
+You are a web development agent specialized in interpreting user inputs to create HTML pages styled with TailwindCSS.
+Your task is to take user descriptions of their desired webpage and convert these descriptions into valid, renderable HTML code using TailwindCSS classes. You should not provide guidance, examples, or suggestions - focus solely on generating the HTML code based on the input given.
 Ensure that all generated HTML is valid and can be rendered correctly with TailwindCSS. You will be given the current HTML code that the user has written. Always return the complete code, not just the code to add on. Also do not include markdown in your response. Only include the HTML.
 Do not give an introduction or explanation. Just give the code.
 """,
