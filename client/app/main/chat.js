@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import {
   Box,
   Paper,
@@ -7,15 +7,16 @@ import {
   Typography,
   IconButton,
   InputAdornment,
-} from "@mui/material";
-import { useState, useEffect, useRef } from "react";
-import ChatMessageBox from "./chatMessageBox";
-import TextInput from "./textInput";
-import axios from "axios";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import CloseIcon from "@mui/icons-material/Close";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import DrawingCanvas from "./canvas";
+} from '@mui/material'
+import {useState, useEffect, useRef} from 'react'
+import ChatMessageBox from './chatMessageBox'
+import TextInput from './textInput'
+import axios from 'axios'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import CloseIcon from '@mui/icons-material/Close'
+import UploadFileIcon from '@mui/icons-material/UploadFile'
+import DrawingCanvas from './canvas'
+import {useAuth} from '@clerk/nextjs'
 
 export default function Chat({
   messages,
@@ -25,127 +26,127 @@ export default function Chat({
   chatObject,
   setChatObject,
 }) {
-  const { userId } = useAuth(); // Call useAuth at the top level
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [image, setImage] = useState(null);
+  const {userId} = useAuth() // Call useAuth at the top level
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const [image, setImage] = useState(null)
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
 
-    if (file && file.type.startsWith("image/")) {
-      setImage(file);
+    if (file && file.type.startsWith('image/')) {
+      setImage(file)
     } else {
-      setImage(null);
+      setImage(null)
     }
-    console.log(file);
-  };
+    console.log(file)
+  }
   const getBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
+  }
   useEffect(() => {
     // This will be called before the component unmounts or when the image state changes
     return () => {
       if (image) {
-        URL.revokeObjectURL(image);
+        URL.revokeObjectURL(image)
       }
-    };
-  }, [image]);
+    }
+  }, [image])
 
   const addMessage = async (newMessage) => {
     if (!image) {
-      const messageToChat = newMessage + `\nThe current html is \n${html}`;
+      const messageToChat = newMessage + `\nThe current html is \n${html}`
       const newMessagesToChat = [
         ...messages,
-        { content: messageToChat, role: "user" },
-      ];
-      const userMessages = [...messages, { content: newMessage, role: "user" }];
-      setMessages(userMessages);
+        {content: messageToChat, role: 'user'},
+      ]
+      const userMessages = [...messages, {content: newMessage, role: 'user'}]
+      setMessages(userMessages)
 
       const conversation = {
-        type: "text",
+        type: 'text',
         messages: processMessages(newMessagesToChat),
-      };
-      console.log("conversation", conversation);
+      }
+      console.log('conversation', conversation)
       const response = await axios.post(
-        "http://localhost:8000/chat",
+        'http://localhost:8000/chat',
         conversation,
-        { headers: { "Content-Type": "application/json" } }
-      );
+        {headers: {'Content-Type': 'application/json'}},
+      )
 
       const newMessages = [
         ...userMessages,
-        { content: response.data, role: "assistant" },
-      ];
+        {content: response.data, role: 'assistant'},
+      ]
       const newChatObject = {
         ...chatObject,
         messages: newMessages,
         currentVersion: response.data,
-      };
-      setChatObject(newChatObject);
+      }
+      setChatObject(newChatObject)
       const body = {
         projectId: userId,
         pageId: chatObject.id,
         newData: newChatObject,
-      };
-      await axios.put("/api/page", body, {
-        headers: { "Content-Type": "application/json" },
-      });
+      }
+      await axios.put('/api/page', body, {
+        headers: {'Content-Type': 'application/json'},
+      })
     } else {
-      const base64Image = await getBase64(image);
+      const base64Image = await getBase64(image)
 
       const newMessagesToChat = [
         ...messages,
         {
           content: [
             {
-              type: "text",
+              type: 'text',
               text: newMessage + `\nThe current html is \n${html}`,
             },
-            { type: "image_url", image_url: { url: base64Image } },
+            {type: 'image_url', image_url: {url: base64Image}},
           ],
-          role: "user",
+          role: 'user',
         },
-      ];
-      const userMessages = [...messages, { content: newMessage, role: "user" }];
-      setMessages(userMessages);
+      ]
+      const userMessages = [...messages, {content: newMessage, role: 'user'}]
+      setMessages(userMessages)
 
       const conversation = {
-        type: "image",
+        type: 'image',
         messages: processMessages(newMessagesToChat),
-      };
+      }
       const response = await axios.post(
-        "http://localhost:8000/chat",
+        'http://localhost:8000/chat',
         conversation,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      setImage(null);
+        {headers: {'Content-Type': 'application/json'}},
+      )
+      setImage(null)
       const newMessages = [
         ...userMessages,
-        { content: response.data, role: "assistant" },
-      ];
+        {content: response.data, role: 'assistant'},
+      ]
       const newChatObject = {
         ...chatObject,
         messages: newMessages,
         currentVersion: response.data,
-      };
-      setChatObject(newChatObject);
+      }
+      setChatObject(newChatObject)
 
       const body = {
         projectId: userId,
         pageId: chatObject.id,
         newData: newChatObject,
-      };
-      await axios.put("/api/page", body, {
-        headers: { "Content-Type": "application/json" },
-      });
+      }
+      await axios.put('/api/page', body, {
+        headers: {'Content-Type': 'application/json'},
+      })
     }
-  };
+  }
   return (
     <Box
       key="chat"
@@ -156,13 +157,13 @@ export default function Chat({
       display="flex"
       flexDirection="column"
     >
-      {" "}
+      {' '}
       <Box flexGrow="1" overflow="auto">
         <ChatMessageBox messages={messages} />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
         <Button
-          style={{ display: "none" }}
+          style={{display: 'none'}}
           id="open-modal"
           onClick={handleOpen}
         />
@@ -188,14 +189,14 @@ export default function Chat({
         >
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "80vw",
-              height: "80vh",
-              bgcolor: "background.paper",
-              border: "2px solid #000",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '80vw',
+              height: '80vh',
+              bgcolor: 'background.paper',
+              border: '2px solid #000',
               boxShadow: 24,
               p: 2,
             }}
@@ -213,7 +214,7 @@ export default function Chat({
             >
               <input
                 accept="image/*"
-                style={{ display: "none" }}
+                style={{display: 'none'}}
                 id="raised-button-file"
                 multiple={false}
                 type="file"
@@ -223,7 +224,7 @@ export default function Chat({
                 <IconButton
                   componnt="span"
                   onClick={() => {
-                    setImage(null); // Remove the image when the close icon is clicked
+                    setImage(null) // Remove the image when the close icon is clicked
                   }}
                   color="primary"
                 >
@@ -248,7 +249,7 @@ export default function Chat({
                   <img
                     src={URL.createObjectURL(image)}
                     alt="Uploaded"
-                    style={{ width: "auto", height: "50vh" }}
+                    style={{width: 'auto', height: '50vh'}}
                   />
                 </Box>
               ) : (
@@ -285,24 +286,24 @@ export default function Chat({
         )}
       </Box> */}
     </Box>
-  );
+  )
 }
 
 // Function to process messages
 const processMessages = (messages) => {
-  let assistantMessageCount = 0;
+  let assistantMessageCount = 0
 
   for (let i = messages.length - 1; i >= 0; i--) {
-    if (messages[i].role === "assistant") {
-      assistantMessageCount++;
+    if (messages[i].role === 'assistant') {
+      assistantMessageCount++
       if (assistantMessageCount > 3) {
         messages[i] = {
           ...messages[i],
-          content: "generated html but removed for brevity",
-        };
+          content: 'generated html but removed for brevity',
+        }
       }
     }
   }
 
-  return messages;
-};
+  return messages
+}
