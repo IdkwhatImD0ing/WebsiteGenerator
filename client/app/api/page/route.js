@@ -23,7 +23,7 @@ export async function GET(req) {
     // Parse the page data (assuming it's stored as a JSON string)
     const data = JSON.parse(pageData)
 
-    return new Response(JSON.stringify({data}), {status: 200})
+    return new Response(JSON.stringify({...data}), {status: 200})
   } catch (error) {
     console.error('Error fetching page:', error)
     return new Response(JSON.stringify({message: 'Error fetching page'}), {
@@ -35,21 +35,21 @@ export async function GET(req) {
 // PUT handler for updating page content
 export async function PUT(req) {
   try {
-    const {userId, projectId, pageId, newData} = await req.json()
+    const {projectId, pageId, newData, pageName} = await req.json()
 
-    // Check if the project belongs to the user
-    const userProjectExists = await redis.hexists(
-      `user:${userId}:projects`,
-      projectId,
-    )
-    if (!userProjectExists) {
-      return new Response(
-        JSON.stringify({
-          message: 'Project not found or does not belong to the user',
-        }),
-        {status: 404},
-      )
-    }
+    // // Check if the project belongs to the user
+    // const userProjectExists = await redis.hexists(
+    //   `user:${userId}:projects`,
+    //   projectId,
+    // )
+    // if (!userProjectExists) {
+    //   return new Response(
+    //     JSON.stringify({
+    //       message: 'Project not found or does not belong to the user',
+    //     }),
+    //     {status: 404},
+    //   )
+    // }
 
     // Construct the full page Redis key
     const pageKey = `page:${projectId}:${pageId}`
@@ -62,8 +62,24 @@ export async function PUT(req) {
       })
     }
 
-    // Update the page data
-    await redis.hset(pageKey, 'data', JSON.stringify(newData))
+    // Prepare updates
+    const updates = {}
+    if (newData) {
+      updates['data'] = JSON.stringify(newData)
+    }
+    if (pageName) {
+      updates['name'] = pageName
+    }
+
+    // Check if there are any updates to apply
+    if (Object.keys(updates).length === 0) {
+      return new Response(JSON.stringify({message: 'No updates provided'}), {
+        status: 400,
+      })
+    }
+
+    // Update the page data and/or page name
+    await redis.hset(pageKey, updates)
 
     return new Response(
       JSON.stringify({message: 'Page updated successfully'}),
@@ -88,22 +104,24 @@ export async function POST(req) {
       projectId,
     )
     if (!userProjectExists) {
-      return new Response(
-        JSON.stringify({
-          message: 'Project not found or does not belong to the user',
-        }),
-        {status: 404},
-      )
+      // Create the project
+      await redis.hset(`user:${userId}:projects`, projectId, '1') //TODO: change to project name
     }
 
     // Generate a unique UUID for the page
     const pageId = uuidv4()
 
+    const intialPageObject = {
+      id: pageId,
+      messages: [],
+      currentVersion: '<div>Enter your first message on the left!</div>',
+    }
+
     // Initialize the page with an empty object and store the page name
     await redis.hset(
       `page:${projectId}:${pageId}`,
       'data',
-      '{}',
+      JSON.stringify(intialPageObject),
       'name',
       pageName,
     )

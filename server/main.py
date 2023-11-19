@@ -41,7 +41,7 @@ def extract_html(content):
         code_block = after_html.split("```", 1)[0]
         return code_block.strip()
     else:
-        return "No HTML code block found"
+        return content
 
 
 @app.post("/chat")
@@ -51,8 +51,9 @@ async def text_chat(conversation: Conversation):
         # Convert all image messages to messages except the last one
         msg = conversation.messages[i]
         if isinstance(msg, ImageMessage):
-            conversation.messages[i] = Message(role=msg.role,
-                                               content=msg.content[0].text)
+            conversation.messages[i] = Message(
+                role=msg.role, content=msg.content[0].text
+            )
 
     systemMessage = Message(
         role="system",
@@ -75,9 +76,9 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=extract_html(
-            response.choices[0].message.content),
-                            status_code=200)
+        return JSONResponse(
+            content=extract_html(response.choices[0].message.content), status_code=200
+        )
     else:
         response = await client.chat.completions.create(
             model="gpt-4-vision-preview",
@@ -86,6 +87,6 @@ Do not give an introduction or explanation. Just give the code.
             temperature=0,
         )
 
-        return JSONResponse(content=extract_html(
-            response.choices[0].message.content),
-                            status_code=200)
+        return JSONResponse(
+            content=extract_html(response.choices[0].message.content), status_code=200
+        )
