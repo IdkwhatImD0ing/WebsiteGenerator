@@ -3,17 +3,9 @@ import Chat from './chat'
 import Renderer from './renderer'
 import Editor from './editor'
 import Sidebar from './sidebar'
+import {useTheme} from '@mui/material/styles'
 
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Stack,
-  Typography,
-} from '@mui/material'
+import {Box, Button, Stack, Typography} from '@mui/material'
 import {useState} from 'react'
 import {useAuth} from '@clerk/nextjs'
 
@@ -21,6 +13,8 @@ import {useAuth} from '@clerk/nextjs'
 //{id: 1, messages: [], currentVersion: string, name: string}
 
 export default function Page() {
+  const theme = useTheme()
+
   const [showChat, setShowChat] = useState(true)
   const [framework, setFramework] = useState('html')
   const [chatObject, setChatObject] = useState({})
