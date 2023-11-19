@@ -27,6 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def extract_html(content):
     if "```html" in content:
         # Split the content by ```html and take the second part
@@ -36,6 +37,7 @@ def extract_html(content):
         return code_block.strip()
     else:
         return "No HTML code block found"
+
 
 @app.post("/chat")
 async def text_chat(conversation: Conversation):
