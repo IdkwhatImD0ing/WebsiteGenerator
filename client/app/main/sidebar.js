@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Sidebar({}) {
@@ -20,12 +21,12 @@ export default function Sidebar({}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // fetchProjects()
+    fetchProjects()
   }, []);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/projects", {
+      const response = await axios.get("http://localhost:3000/api/page", {
         headers: { "Content-Type": "application/json" },
       });
       console.log(response);
@@ -72,6 +73,10 @@ export default function Sidebar({}) {
     setOpen(!open);
   };
 
+  const addProject = () => {
+    console.log("addProject");
+  }
+
   return (
     <Box>
       <Button onClick={toggleDrawer}>
@@ -84,6 +89,9 @@ export default function Sidebar({}) {
         variant="temporary"
       >
         <Box style={{ textAlign: "right" }}>
+        <Button onClick={addProject}>
+            <AddIcon />
+          </Button>
           <Button onClick={toggleDrawer}>
             <CloseIcon />
           </Button>
