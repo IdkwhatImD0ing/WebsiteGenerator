@@ -17,6 +17,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import DrawingCanvas from './canvas'
 import {useAuth} from '@clerk/nextjs'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function Chat({
   messages,
@@ -169,7 +170,13 @@ export default function Chat({
         <Button
           style={{display: 'none'}}
           id="open-modal"
-          onClick={handleOpen}
+          onClick={()=>{
+            if (image !== null) {
+              setImage(null)
+            } else {
+              handleOpen()
+            } 
+          }}
         />
 
         <TextInput
@@ -178,7 +185,9 @@ export default function Chat({
             <InputAdornment position="start">
               <label htmlFor="open-modal">
                 <IconButton component="span" color="primary.main">
-                  <AddCircleOutlineIcon color="primary.main" />
+                  {
+                    image !== null  ? <HighlightOffIcon color="primary.main" /> : <AddCircleOutlineIcon color="primary.main" />
+                  }
                 </IconButton>
               </label>
             </InputAdornment>
