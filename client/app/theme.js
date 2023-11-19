@@ -14,7 +14,11 @@ createTheme({
         },
         background: {
             default: isDarkMode ? '#121212' : '#28282B',
-            inverted: isDarkMode ? '#28282B' : '#121212',
+            inverted: '#28282B',
+            blue: "#5D3FD3",
+            green: "#3FD3A7",
+            yellow: "#B5D33F",
+            red: "#D33F6B"
         },
         text: {
             primary: isDarkMode ? '#ffffff' : '#000000',
