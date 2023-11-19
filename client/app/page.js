@@ -51,7 +51,7 @@ export default function Home() {
             flexDirection: "row",
           }}
         >
-          <Link href="/sign-in" passHref>
+          <Link href="/main" passHref>
             <Button variant="contained">Sign In</Button>
           </Link>
           <Link href="/sign-up" passHref>
@@ -81,6 +81,25 @@ export default function Home() {
             seamless collaboration with an AI chatbox to design, edit, and
             refine your ideal website in real-time.
           </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: "0",
+            right: "0",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Link href="/main" passHref>
+            <Button variant="contained">Sign In</Button>
+          </Link>
+          <Link href="/sign-up" passHref>
+            <Button variant="contained">Sign Up</Button>
+          </Link>
         </Box>
       </Box>
     </Box>
