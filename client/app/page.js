@@ -21,7 +21,6 @@ export default function Home() {
       sx={{backgroundImage: 'linear-gradient(to right, #ff6e7f, #bfe9ff)'}}
       position="relative"
     >
-      {' '}
       <Image
         priority={true}
         src="/desk.png"
@@ -39,24 +38,6 @@ export default function Home() {
         }}
       >
         {' '}
-        <Stack
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          justifyContent="flex-end"
-          sx={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-          }}
-        >
-          <Link href="/main" passHref>
-            <Button variant="contained">Sign In</Button>
-          </Link>
-          <Link href="/sign-up" passHref>
-            <Button variant="contained">Sign Up</Button>
-          </Link>
-        </Stack>
         <Box
           display="flex"
           flexDirection="column"
@@ -81,6 +62,24 @@ export default function Home() {
           </Typography>
         </Box>
       </Box>
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        justifyContent="flex-end"
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
+      >
+        <Link href="/main" passHref>
+          <Button variant="contained">Sign In</Button>
+        </Link>
+        <Link href="/sign-up" passHref>
+          <Button variant="contained">Sign Up</Button>
+        </Link>
+      </Stack>{' '}
     </Box>
   )
 }
