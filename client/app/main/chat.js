@@ -78,7 +78,7 @@ export default function Chat({
       }
       console.log('conversation', conversation)
       const response = await axios.post(
-        'https://webweaver-405518.uc.r.appspot.com/chat',
+        'https://api.art3m1s.me/webweaver/chat',
         conversation,
         {headers: {'Content-Type': 'application/json'}},
       )
@@ -125,7 +125,7 @@ export default function Chat({
         messages: processMessages(newMessagesToChat),
       }
       const response = await axios.post(
-        'https://webweaver-405518.uc.r.appspot.com/chat',
+        'https://api.art3m1s.me/webweaver/chat',
         conversation,
         {headers: {'Content-Type': 'application/json'}},
       )
