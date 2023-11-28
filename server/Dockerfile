@@ -15,4 +15,4 @@ EXPOSE 8000
 
 # Run app.py when the container launches
 # Adjust the number of workers and threads as needed
-CMD ["gunicorn", "main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:4003"]
